@@ -26,8 +26,8 @@ paddle_b = pygame.Rect(WIDTH - 60, HEIGHT//2 - 50, 10, 100)
 
 # Bóng
 ball = pygame.Rect(WIDTH//2 - 15, HEIGHT//2 - 15, 30, 30)
-ball_speed_x = 7
-ball_speed_y = 7
+ball_speed_x = 3
+ball_speed_y = 3
 
 # Điểm số
 score_a = 0
