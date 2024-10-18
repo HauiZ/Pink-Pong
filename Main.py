@@ -11,6 +11,8 @@ pg.display.set_caption("Pong")
 color_def = "white"
 score_a = 0
 score_b = 0
+background = pg.image.load('Tennis.jpeg')
+background = pg.transform.scale(background, (WIDTH, HEIGHT))
 
 if __name__ == '__main__' : 
     pg.init()
@@ -21,7 +23,7 @@ if __name__ == '__main__' :
     paddle_a = Paddle.Paddle(10,HEIGHT//2,10,100)
     paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2,10,100)
     while True:
-        screen.fill((0,0,0))
+        screen.blit(background, (0, 0))
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -40,7 +42,7 @@ if __name__ == '__main__' :
             score_a += 1
             ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
 
-        score_display = font.render(f"{score_a} : {score_b}", True, color_def)
+        score_display = font.render(f"{score_a} : {score_b}", True, "yellow")
         screen.blit(score_display, (WIDTH//2 - 20, 10))
 
         ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)

@@ -2,7 +2,7 @@ import pygame as pg
 import numpy as np
 import random
 
-defaut_color = "white"
+defaut_color = "yellow"
 
 class Ball:
 
@@ -34,11 +34,12 @@ class Ball:
 
     def Reset(self, x, y):
         self.ball_position = np.array([x, y], dtype=np.float64)
-        self.ball_velocity = np.array([6,6],dtype= np.float64)
+        self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*6,6],dtype= np.float64)
         ran = random.randint(-1, 1)
         while ran == 0:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
+
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
