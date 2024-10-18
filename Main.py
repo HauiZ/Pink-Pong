@@ -2,53 +2,52 @@ import pygame as pg
 import numpy as np
 import Ball
 import Paddle
+import random
 
-WIDTH = 1024
+WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Pong")
 color_def = "white"
+score_a = 0
+score_b = 0
 
 if __name__ == '__main__' : 
     pg.init()
     clock = pg.time.Clock()
-<<<<<<< Updated upstream
-    ball = Ball.Ball(50,50,screen)
-    
-=======
-    ball = Ball.Ball(50,50)
-    paddle_a = Paddle.Paddle(0,HEIGHT//2 - 50,10,100)
-    paddle_b = Paddle.Paddle(WIDTH-10,HEIGHT//2 - 50,10,100)
->>>>>>> Stashed changes
+    ball = Ball.Ball(500,50,screen)
+    font = pg.font.Font(None, 36)
+
+    paddle_a = Paddle.Paddle(10,HEIGHT//2,10,100)
+    paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2,10,100)
     while True:
         screen.fill((0,0,0))
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-<<<<<<< Updated upstream
-=======
+                exit()  # Thêm lệnh này để thoát chương trình hoàn toàn
             
+        paddle_a.Draw(screen)
+        paddle_b.Draw(screen)
+        
         paddle_a.Move1()
         paddle_b.Move2()
         
-        screen.fill("black")
+        if ball.ball_position[0] <= 0 + 5:
+            score_b += 1
+            ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
+        if ball.ball_position[0] >= WIDTH - 5:
+            score_a += 1
+            ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
 
-        ball.Draw(screen)
-        paddle_a.Draw(screen)
-        paddle_b.Draw(screen)
+        score_display = font.render(f"{score_a} : {score_b}", True, color_def)
+        screen.blit(score_display, (WIDTH//2 - 20, 10))
 
->>>>>>> Stashed changes
-
-        #bound
-        bar = pg.draw.rect(screen,(255, 192, 203),pg.Rect(10,0,10,HEIGHT))
-        bar2 = pg.draw.rect(screen,(255, 192, 203),pg.Rect(WIDTH -20,0,10,HEIGHT))
-
-
-        if pg.Rect.colliderect(ball.ball,bar) or pg.Rect.colliderect(ball.ball,bar2):
+        if pg.Rect.colliderect(ball.ball,paddle_a) or pg.Rect.colliderect(ball.ball,paddle_b):
             ball.Hit()
+            
         ball.Updateposition(HEIGHT)
         ball.Display(screen)
         
-       
         pg.display.flip()
         clock.tick(60)

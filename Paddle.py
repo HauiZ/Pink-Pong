@@ -11,7 +11,8 @@ class Paddle:
         self.height = height
         self.color = defaut_color
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.speed = 7  # Tốc độ di chuyển của paddle
+        self.speed = 10
+        self.velocity = 1
 
     def Draw(self, window):
         pygame.draw.rect(window, self.color, self.rect)
