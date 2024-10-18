@@ -43,7 +43,7 @@ def draw_objects():
     
     # Vẽ đường giữa đứt khúc với khoảng trống lớn hơn
     for y in range(0, HEIGHT, 100):
-        pygame.draw.line(screen, WHITE, (WIDTH//2, y+10), (WIDTH//2, y + 30), 5)
+        pygame.draw.line(screen, WHITE, (WIDTH//2, y+10), (WIDTH//2, y + 50), 5)
     
     score_display = font.render(f"{score_a} : {score_b}", True, WHITE)
     screen.blit(score_display, (WIDTH//2 - 30, 10))
@@ -76,11 +76,16 @@ while True:
         ball_speed_y *= -1
     
     # Kiểm tra va chạm với paddle và vạch giữa
+    # Kiểm tra va chạm với paddle
     if ball.colliderect(paddle_a) or ball.colliderect(paddle_b):
-        ball_speed_x *= -1
+        ball_speed_x *= -1  # Đổi hướng bóng theo trục x khi chạm paddle
+    
+    # Kiểm tra khi bóng ở giữa sân
     elif ball.centerx == WIDTH // 2:
-        if ball.centery % 100 >= 50:  # Nếu bóng chạm vào phần vạch
-            ball_speed_x *= -1
+        # Kiểm tra xem bóng có chạm vào phần vạch hay không
+        if ball.centery % 100 >= 50:  # Nếu bóng chạm vào phần vạch (50 pixel cuối của mỗi đoạn 100 pixel)
+            ball_speed_x *= -1  # Đổi hướng bóng theo trục x khi chạm vạch
+        # Nếu bóng ở khoảng trống (50 pixel đầu của mỗi đoạn 100 pixel), cho nó đi qua mà không thay đổi hướng
         # Nếu bóng ở khoảng trống, cho nó đi qua
     
     # Kiểm tra điểm số
