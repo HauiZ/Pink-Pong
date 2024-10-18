@@ -39,6 +39,15 @@ class Ball:
         while ran == 0:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
+
+    def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
+        # Check left and right boundaries
+        if self.ball_position[0] <= 20 and self.ball.colliderect(bar):  # Left boundary (bar width + ball radius)
+            self.ball_position[0] = 20
+            self.Hit()
+        elif self.ball_position[0] >= WIDTH - 20 and self.ball.colliderect(bar2):  # Right boundary
+            self.ball_position[0] = WIDTH - 20
+            self.Hit()
         
 
     

@@ -43,8 +43,7 @@ if __name__ == '__main__' :
         score_display = font.render(f"{score_a} : {score_b}", True, color_def)
         screen.blit(score_display, (WIDTH//2 - 20, 10))
 
-        if pg.Rect.colliderect(ball.ball,paddle_a) or pg.Rect.colliderect(ball.ball,paddle_b):
-            ball.Hit()
+        ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             
         ball.Updateposition(HEIGHT)
         ball.Display(screen)
