@@ -3,6 +3,7 @@ import numpy as np
 import Ball
 import Paddle
 import random
+import Atribute_ball
 
 WIDTH = 1400
 HEIGHT = 700
@@ -27,6 +28,7 @@ def draw_objects():
     paddle_a.Draw(screen)
     paddle_b.Draw(screen)
     ball.Display(screen)
+    test_ball.Display(screen)
     score_display = font.render(f"{score_a} : {score_b}", True, "yellow")
     screen.blit(score_display, (WIDTH//2 - 20, 10))
 
@@ -37,6 +39,7 @@ if __name__ == '__main__' :
     font = pg.font.Font(None, 36)
     paddle_a = Paddle.Paddle(10,0,10,HEIGHT)
     paddle_b = Paddle.Paddle(WIDTH-20,0,10,HEIGHT)
+    test_ball = Atribute_ball.Atribute_ball(WIDTH // 2,0,screen)
     while True:
         screen.blit(background, (0, 0))
         for event in pg.event.get():
@@ -59,7 +62,7 @@ if __name__ == '__main__' :
            
                 
             ball.Updateposition(HEIGHT)
-        
+            test_ball.Updateposition(HEIGHT,WIDTH)
 
         if score_a >= 10 or score_b >= 10:
             game_state = "game_over"
@@ -74,5 +77,5 @@ if __name__ == '__main__' :
                 paddle_b.Reset(WIDTH-20,HEIGHT//2)
         
         pg.display.flip()
-        clock.tick(60)
+        clock.tick(90)
 

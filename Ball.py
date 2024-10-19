@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy as np
 import random
-import Main
+
 defaut_color = "yellow"
 
 class Ball:
@@ -11,11 +11,11 @@ class Ball:
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
         self.ball_velocity = np.array([6,6],dtype= np.float64)
-        self.color = defaut_color
-        self.ball = pg.draw.circle(window,defaut_color,self.ball_position,10)
+        self.color = "yellow"
+        self.ball = pg.draw.circle(window,self.color,self.ball_position,10)
 
     def Display(self,window):
-        self.ball = pg.draw.circle(window,defaut_color,self.ball_position,10)
+        self.ball = pg.draw.circle(window,self.color,self.ball_position,10)
 
     
 
