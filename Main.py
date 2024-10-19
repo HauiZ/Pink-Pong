@@ -35,8 +35,8 @@ if __name__ == '__main__' :
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
-    paddle_a = Paddle.Paddle(10,HEIGHT//2,10,100)
-    paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2,10,100)
+    paddle_a = Paddle.Paddle(10,0,10,HEIGHT)
+    paddle_b = Paddle.Paddle(WIDTH-20,0,10,HEIGHT)
     while True:
         screen.blit(background, (0, 0))
         for event in pg.event.get():
@@ -48,6 +48,7 @@ if __name__ == '__main__' :
             paddle_a.Move1()
             paddle_b.Move2()
             draw_objects()
+            ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
                 score_b += 1
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
@@ -55,7 +56,7 @@ if __name__ == '__main__' :
                 score_a += 1
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
             
-            ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
+           
                 
             ball.Updateposition(HEIGHT)
         

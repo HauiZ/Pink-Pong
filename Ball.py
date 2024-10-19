@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy as np
 import random
-
+import Main
 defaut_color = "yellow"
 
 class Ball:
@@ -43,10 +43,10 @@ class Ball:
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
-        if self.ball_position[0] <= 20 and self.ball.colliderect(bar):  # Left boundary (bar width + ball radius)
+        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.y and self.ball_position[1] <= bar.y + bar.height):  # Left boundary (bar width + ball radius)
             self.ball_position[0] = 20
             self.Hit()
-        elif self.ball_position[0] >= WIDTH - 20 and self.ball.colliderect(bar2):  # Right boundary
+        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.y and self.ball_position[1] <= bar2.y + bar2.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
             self.Hit()
         
