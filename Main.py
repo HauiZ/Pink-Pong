@@ -51,6 +51,7 @@ if __name__ == '__main__' :
             paddle_a.Move1()
             paddle_b.Move2()
             draw_objects()
+            # ball.check_Hit_Atribute(test_ball)
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
                 score_b += 1
@@ -61,8 +62,8 @@ if __name__ == '__main__' :
             
            
                 
-            ball.Updateposition(HEIGHT)
-            test_ball.Updateposition(HEIGHT,WIDTH)
+            ball.Updateposition(HEIGHT,test_ball)
+            test_ball.Updateposition(HEIGHT,WIDTH,ball.ball_velocity)
 
         if score_a >= 10 or score_b >= 10:
             game_state = "game_over"
