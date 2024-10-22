@@ -1,18 +1,20 @@
 import pygame as pg
 import numpy as np
 import random
+import threading
+import time
 
 defaut_color = "yellow"
 
 class Ball:
     ball_radius = 10
     def __init__(self,ball_x,ball_y,window):
+        self.lock = threading.Lock()
         self.ball_x = ball_x
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
-        self.ball_velocity = np.array([6,6],dtype= np.float64)
+        self.ball_velocity = np.array([10,10],dtype= np.float64)
         self.color = "yellow"
-        
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
 
     def Display(self,window):
@@ -23,15 +25,18 @@ class Ball:
     def Hit(self):
         self.ball_velocity[0] *= -1
         if self.ball_velocity[0] > 0:
-            self.ball_velocity += [1,0]
+            self.ball_velocity += [0,0]
         else:
-            self.ball_velocity += [-1,0]
+            self.ball_velocity += [-0,0]
         pass
-    def Updateposition(self,HEIGHT,ball_Atribute):
-        if self.check_Hit_Atribute(ball_Atribute):
-            self.ball_velocity *= 2
+    def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b):
+        atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
+        atribute_paddle_speed = threading.Thread(target=self.run_check_Hit_Atribute_paddle_speed, args=(ball_Atribute, paddle_a, paddle_b,))
+        atribute_size = threading.Thread(target=self.run_check_Hit_Atribute_size, args=(ball_Atribute,))
+        atribute_speed.start()
+        atribute_paddle_speed.start()
+        atribute_size.start()
         self.ball_position = self.ball_position + self.ball_velocity
-
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
         pass
@@ -53,10 +58,44 @@ class Ball:
         elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.y and self.ball_position[1] <= bar2.y + bar2.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
             self.Hit()
-    def check_Hit_Atribute(self,ball_Atribute):
-        if self.ball.colliderect(ball_Atribute.ball):
+    def check_Hit_Atribute_speed(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "red":
             return True
-            # ball_Atribute.Atribute_function(self.ball_velocity)
+    def run_check_Hit_Atribute_speed(self,ball_Atribute):
+        if self.check_Hit_Atribute_speed(ball_Atribute) and ball_Atribute.hit == False:
+            print("Hit1")
+            ball_Atribute.hit = True
+            self.ball_velocity *= 2
+            time.sleep(5)
+            self.ball_velocity /= 2
+        
+    def check_Hit_Atribute_paddle_speed(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "blue":
+            return True
+    def run_check_Hit_Atribute_paddle_speed(self,ball_Atribute, paddle_a, paddle_b):
+        if self.check_Hit_Atribute_paddle_speed(ball_Atribute) and ball_Atribute.hit == False:
+            print("Hit2")
+            ball_Atribute.hit = True
+            if self.ball_velocity[0] > 0:
+                paddle_a.speed += 10
+                time.sleep(5)
+                paddle_a.speed -= 10
+            else:
+                paddle_b.speed += 10
+                time.sleep(5)
+                paddle_b.speed -= 10
+
+    def check_Hit_Atribute_size(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "green":
+            return True
+    def run_check_Hit_Atribute_size(self,ball_Atribute):
+        if self.check_Hit_Atribute_size(ball_Atribute) and ball_Atribute.hit == False:
+            print("Hit3")
+            ball_Atribute.hit = True
+            self.ball_radius *= 2
+            time.sleep(5)
+            self.ball_radius /= 2
+
         
         
 

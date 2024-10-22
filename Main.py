@@ -27,8 +27,8 @@ def draw_objects():
     screen.blit(background, (0, 0))
     paddle_a.Draw(screen)
     paddle_b.Draw(screen)
-    ball.Display(screen)
     test_ball.Display(screen)
+    ball.Display(screen)
     score_display = font.render(f"{score_a} : {score_b}", True, "yellow")
     screen.blit(score_display, (WIDTH//2 - 20, 10))
 
@@ -37,9 +37,9 @@ if __name__ == '__main__' :
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
-    paddle_a = Paddle.Paddle(10,0,10,HEIGHT)
-    paddle_b = Paddle.Paddle(WIDTH-20,0,10,HEIGHT)
-    test_ball = Atribute_ball.Atribute_ball(WIDTH // 2,0,screen)
+    paddle_a = Paddle.Paddle(10,0,10,100)
+    paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
+    test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     while True:
         screen.blit(background, (0, 0))
         for event in pg.event.get():
@@ -60,10 +60,15 @@ if __name__ == '__main__' :
                 score_a += 1
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
             
-           
+            if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
+                if test_ball.active == False:
+                    test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
+            elif ball.ball.colliderect(paddle_b) or (ball.ball_position[0] >= WIDTH - 20 and (ball.ball_position[1] >= paddle_b.paddle_position[1] and ball.ball_position[1] <= paddle_b.paddle_position[1] + paddle_b.height)):
+                if test_ball.active == False:
+                    test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
                 
-            ball.Updateposition(HEIGHT,test_ball)
-            test_ball.Updateposition(HEIGHT,WIDTH,ball.ball_velocity)
+            ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b)
+            test_ball.Updateposition(HEIGHT,WIDTH)
 
         if score_a >= 10 or score_b >= 10:
             game_state = "game_over"
@@ -79,4 +84,3 @@ if __name__ == '__main__' :
         
         pg.display.flip()
         clock.tick(90)
-
