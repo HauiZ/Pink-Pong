@@ -1,3 +1,5 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame as pg
 import numpy as np
 import Ball
@@ -12,7 +14,9 @@ pg.display.set_caption("Pong")
 color_def = "white"
 score_a = 0
 score_b = 0
-background = pg.image.load('Tennis.jpeg')
+combo_countera = 0
+combo_counterb = 0
+background = pg.image.load('feild.jpg')
 background = pg.transform.scale(background, (WIDTH, HEIGHT))
 game_state = "playing"
 
@@ -29,11 +33,14 @@ def draw_objects():
     paddle_b.Draw(screen)
     test_ball.Display(screen)
     ball.Display(screen)
-    score_display = font.render(f"{score_a} : {score_b}", True, "yellow")
-    screen.blit(score_display, (WIDTH//2 - 20, 10))
+    score_display = font.render(f"{score_a} : {score_b}", True, "black")
+    screen.blit(score_display, (WIDTH//2 - 26, 10))
 
 if __name__ == '__main__' : 
     pg.init()
+    pg.mixer.init()
+    cheer = pg.mixer.Sound('Cheering.wav')  #Thiết lập âm thanh cổ động viên 
+    ohh = pg.mixer.Sound('ohh.wav')         #Thiết lập âm thanh cổ động viên
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
@@ -55,11 +62,28 @@ if __name__ == '__main__' :
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
                 score_b += 1
+                combo_counterb += 1
+                combo_countera = 0
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
+                if combo_counterb % 3 == 0:
+                    cheer.set_volume(0.5)
+                    cheer.play()    #lệnh chạy âm thanh
+                    combo_counterb = 0
+                elif score_a - score_b >= 4 and combo_counterb == 1:
+                    ohh.set_volume(0.7)
+                    ohh.play()
             if ball.ball_position[0] >= WIDTH - 5:
                 score_a += 1
+                combo_countera += 1
+                combo_counterb = 0
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
-            
+                if combo_countera % 3 == 0:
+                    cheer.set_volume(0.5)
+                    cheer.play()    
+                    combo_countera = 0
+                elif score_b - score_a >= 4 and combo_countera == 1:
+                    ohh.set_volume(0.7)
+                    ohh.play()
             if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball

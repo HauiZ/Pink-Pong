@@ -1,3 +1,5 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame as pg
 import numpy as np
 import random
@@ -5,6 +7,10 @@ import threading
 import time
 
 defaut_color = "yellow"
+pg.mixer.init()
+bounce = pg.mixer.Sound('bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
+left = pg.mixer.Sound('leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
+right = pg.mixer.Sound('rightplayer.wav')       #Thiết lập âm thanh của người chơi bên phải
 
 class Ball:
     ball_radius = 10
@@ -39,6 +45,7 @@ class Ball:
         self.ball_position = self.ball_position + self.ball_velocity
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
+            bounce.play()       #lệnh chạy âm thanh
         pass
 
     def Reset(self, x, y):
@@ -54,9 +61,11 @@ class Ball:
         # Check left and right boundaries
         if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.y and self.ball_position[1] <= bar.y + bar.height):  # Left boundary (bar width + ball radius)
             self.ball_position[0] = 20
+            left.play()
             self.Hit()
         elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.y and self.ball_position[1] <= bar2.y + bar2.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
+            right.play()
             self.Hit()
     def check_Hit_Atribute_speed(self,ball_Atribute):
         if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "red":
