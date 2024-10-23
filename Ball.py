@@ -19,7 +19,7 @@ class Ball:
         self.ball_x = ball_x
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
-        self.ball_velocity = np.array([10,10],dtype= np.float64)
+        self.ball_velocity = np.array([6,6],dtype= np.float64)
         self.color = "yellow"
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
 
@@ -42,10 +42,10 @@ class Ball:
         atribute_speed.start()
         atribute_paddle_speed.start()
         atribute_size.start()
-        self.ball_position = self.ball_position + self.ball_velocity
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
-            bounce.play()       #lệnh chạy âm thanh
+            bounce.play() 
+        self.ball_position = self.ball_position + self.ball_velocity      #lệnh chạy âm thanh
         pass
 
     def Reset(self, x, y):
@@ -59,11 +59,11 @@ class Ball:
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
-        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.y and self.ball_position[1] <= bar.y + bar.height):  # Left boundary (bar width + ball radius)
+        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.height):  # Left boundary (bar width + ball radius)
             self.ball_position[0] = 20
             left.play()
             self.Hit()
-        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.y and self.ball_position[1] <= bar2.y + bar2.height):  # Right boundary
+        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
             right.play()
             self.Hit()
@@ -74,9 +74,12 @@ class Ball:
         if self.check_Hit_Atribute_speed(ball_Atribute) and ball_Atribute.hit == False:
             print("Hit1")
             ball_Atribute.hit = True
-            self.ball_velocity *= 2
+            self.ball_velocity[0] += 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
+            self.ball_velocity[1] += 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
             time.sleep(5)
-            self.ball_velocity /= 2
+            self.ball_velocity[0] -= 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
+            self.ball_velocity[1] -= 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
+
         
     def check_Hit_Atribute_paddle_speed(self,ball_Atribute):
         if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "blue":

@@ -16,7 +16,7 @@ class Atribute_ball():
         self.color = random.choice(self.Atribute_list)
         self.element = random.choice(self.Atribute_list)
         self.atribute = str(self.element)
-        self.ball_radius = 50
+        self.ball_radius = 100
         self.ball_velocity = np.array([0,0.5],dtype= np.float64)
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
         self.active = True

@@ -44,7 +44,7 @@ if __name__ == '__main__' :
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
-    paddle_a = Paddle.Paddle(10,0,10,100)
+    paddle_a = Paddle.Paddle(10,0,10,700)
     paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     while True:
@@ -56,7 +56,11 @@ if __name__ == '__main__' :
         if game_state == "playing":
                 
             paddle_a.Move1()
-            paddle_b.Move2()
+            #paddle_b.Move2()
+            if paddle_b.rect.y + paddle_b.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                paddle_b.paddble_b_up()
+            elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                paddle_b.paddble_b_down()
             draw_objects()
             # ball.check_Hit_Atribute(test_ball)
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)

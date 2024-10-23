@@ -35,3 +35,10 @@ class Paddle:
     def Reset(self,x,y):
         self.paddle_position = [x,y]
         self.rect = pygame.Rect( self.paddle_position[0], self.paddle_position[1], self.width, self.height)
+    
+    def paddble_b_up(self):
+        if self.rect.top> 0:
+            self.rect.y -= 8
+    def paddble_b_down(self):
+        if self.rect.bottom < 700 :
+            self.rect.y += 8
