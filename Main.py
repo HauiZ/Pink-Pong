@@ -6,7 +6,7 @@ import Ball
 import Paddle
 import random
 import Atribute_ball
-
+import GUI 
 WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -16,37 +16,19 @@ score_a = 0
 score_b = 0
 combo_countera = 0
 combo_counterb = 0
-background = pg.image.load('feild.jpg')
-background = pg.transform.scale(background, (WIDTH, HEIGHT))
 game_state = "game_menu"
 mode = "single"
 mode_changed = False
 
-def draw_game_menu(mode):
-    screen.blit(background, (0, 0))
-    text = font.render("Welcome to Pong!", True, "white")
-    start = font.render("Press Space to start", True, "white")
-    mode_game = font.render(f"Press R to switch mode : {mode} ", True, "white")
-    screen.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//3))
-    screen.blit(start, (WIDTH//2 - start.get_width()//2, HEIGHT//2))
-    screen.blit(mode_game, (WIDTH//2 - mode_game.get_width()//2, HEIGHT//1.5))
-    
-
-def draw_game_over(winner):
-    screen.blit(background, (0, 0))
-    text = font.render(f"Player {winner} win!", True, "red")
-    restart = font.render("Press R to restart", True, "red")
-    screen.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//3))
-    screen.blit(restart, (WIDTH//2 - restart.get_width()//2, HEIGHT//2))
-
-def draw_objects():
-    screen.blit(background, (0, 0))
-    paddle_a.Draw(screen)
-    paddle_b.Draw(screen)
-    test_ball.Display(screen)
-    ball.Display(screen)
-    score_display = font.render(f"{score_a} : {score_b}", True, "black")
-    screen.blit(score_display, (WIDTH//2 - 26, 10))
+def draw_objects(window, background):
+        
+    window.blit(background, (0, 0))
+    paddle_a.Draw(window)
+    paddle_b.Draw(window)
+    test_ball.Display(window)
+    ball.Display(window)
+    score_display = font.render(f"{score_a} : {score_b}", True, "red")
+    window.blit(score_display, (WIDTH//2 - 26, 10))
 
 if __name__ == '__main__' : 
     pg.init()
@@ -59,15 +41,16 @@ if __name__ == '__main__' :
     paddle_a = Paddle.Paddle(10,0,10,700)
     paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
+    Draw = GUI.Draw(screen)
     while True:
-        screen.blit(background, (0, 0))
+        Draw.draw_map(screen)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 exit()  # Thêm lệnh này để thoát chương trình hoàn toàn
         
         if game_state == "game_menu":
-            draw_game_menu(mode)
+            Draw.draw_game_menu(mode,screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_SPACE]:
                 game_state = "playing"
@@ -90,7 +73,7 @@ if __name__ == '__main__' :
                     paddle_b.paddble_b_up()
                 elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_down()
-            draw_objects()
+            draw_objects(screen, Draw.background)
             # ball.check_Hit_Atribute(test_ball)
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
@@ -124,16 +107,18 @@ if __name__ == '__main__' :
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
                 
-            ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b)
+            ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b, Draw)
             test_ball.Updateposition(HEIGHT,WIDTH)
 
         if score_a >= 10 or score_b >= 10:
             game_state = "game_over"
             winner = "A" if score_a > score_b else "B"
-            draw_game_over(winner)
+            Draw.draw_game_over(winner, screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_r]:
                 game_state = "game_menu"
+                Draw.change_background('images/field.png')
+                Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))
                 score_a = score_b = 0
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
                 paddle_a.Reset(10,HEIGHT//2)

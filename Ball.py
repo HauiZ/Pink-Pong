@@ -5,12 +5,15 @@ import numpy as np
 import random
 import threading
 import time
+import GUI
 
 defaut_color = "yellow"
 pg.mixer.init()
 bounce = pg.mixer.Sound('bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
 left = pg.mixer.Sound('leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
-right = pg.mixer.Sound('rightplayer.wav')       #Thiết lập âm thanh của người chơi bên phải
+right = pg.mixer.Sound('rightplayer.wav')  
+WIDTH = 1400
+HEIGHT = 700   #Thiết lập âm thanh của người chơi bên phải
 
 class Ball:
     ball_radius = 15
@@ -33,13 +36,17 @@ class Ball:
         self.ball_velocity[0] += 1 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
         self.ball_velocity[1] += 1 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
         pass
-    def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b):
+    def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b, drawing):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
         atribute_paddle_speed = threading.Thread(target=self.run_check_Hit_Atribute_paddle_speed, args=(ball_Atribute, paddle_a, paddle_b,))
-        atribute_size = threading.Thread(target=self.run_check_Hit_Atribute_size, args=(ball_Atribute,))
+        atribute_map1 = threading.Thread(target=self.run_check_Hit_Atribute_map1, args=(ball_Atribute, drawing, ))
+        atribute_map2 = threading.Thread(target=self.run_check_Hit_Atribute_map2, args=(ball_Atribute, drawing, ))
+        atribute_map3 = threading.Thread(target=self.run_check_Hit_Atribute_map3, args=(ball_Atribute, drawing, ))
         atribute_speed.start()
         atribute_paddle_speed.start()
-        atribute_size.start()
+        atribute_map1.start()
+        atribute_map2.start()
+        atribute_map3.start()
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
             bounce.play() 
@@ -96,19 +103,30 @@ class Ball:
                 time.sleep(5)
                 paddle_b.speed -= 10
 
-    def check_Hit_Atribute_size(self,ball_Atribute):
+    def check_Hit_Atribute_map1(self,ball_Atribute):
         if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "green":
             return True
-    def run_check_Hit_Atribute_size(self,ball_Atribute):
-        if self.check_Hit_Atribute_size(ball_Atribute) and ball_Atribute.hit == False:
-            print("Hit3")
+    def run_check_Hit_Atribute_map1(self,ball_Atribute, drawing):
+        if self.check_Hit_Atribute_map1(ball_Atribute) and ball_Atribute.hit == False:
             ball_Atribute.hit = True
-            self.ball_radius *= 2
-            time.sleep(5)
-            self.ball_radius /= 2
+            drawing.change_background('images/field.png')
 
-        
-        
+    def check_Hit_Atribute_map2(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "yellow":
+            return True
+    def run_check_Hit_Atribute_map2(self,ball_Atribute, drawing):
+        if self.check_Hit_Atribute_map2(ball_Atribute) and ball_Atribute.hit == False:
+            ball_Atribute.hit = True
+            drawing.change_background('images/sand_field.png')
+
+    def check_Hit_Atribute_map3(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "black":
+            return True
+    def run_check_Hit_Atribute_map3(self,ball_Atribute, drawing):
+        if self.check_Hit_Atribute_map3(ball_Atribute) and ball_Atribute.hit == False:
+            ball_Atribute.hit = True
+            drawing.change_background('images/space_field.png')
+                
 
     
 
