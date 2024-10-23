@@ -18,7 +18,19 @@ combo_countera = 0
 combo_counterb = 0
 background = pg.image.load('feild.jpg')
 background = pg.transform.scale(background, (WIDTH, HEIGHT))
-game_state = "playing"
+game_state = "game_menu"
+mode = "single"
+mode_changed = False
+
+def draw_game_menu(mode):
+    screen.blit(background, (0, 0))
+    text = font.render("Welcome to Pong!", True, "white")
+    start = font.render("Press Space to start", True, "white")
+    mode_game = font.render(f"Press R to switch mode : {mode} ", True, "white")
+    screen.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//3))
+    screen.blit(start, (WIDTH//2 - start.get_width()//2, HEIGHT//2))
+    screen.blit(mode_game, (WIDTH//2 - mode_game.get_width()//2, HEIGHT//1.5))
+    
 
 def draw_game_over(winner):
     screen.blit(background, (0, 0))
@@ -40,7 +52,7 @@ if __name__ == '__main__' :
     pg.init()
     pg.mixer.init()
     cheer = pg.mixer.Sound('Cheering.wav')  #Thiết lập âm thanh cổ động viên 
-    ohh = pg.mixer.Sound('ohh.wav')         #Thiết lập âm thanh cổ động viên
+    ohh = pg.mixer.Sound('ohh.wav')         #Thiết lp âm thanh cổ động viên
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
@@ -53,14 +65,31 @@ if __name__ == '__main__' :
             if event.type == pg.QUIT:
                 pg.quit()
                 exit()  # Thêm lệnh này để thoát chương trình hoàn toàn
-        if game_state == "playing":
-                
+        
+        if game_state == "game_menu":
+            draw_game_menu(mode)
+            keys = pg.key.get_pressed()
+            if keys[pg.K_SPACE]:
+                game_state = "playing"
+            elif keys[pg.K_r]:
+                if not mode_changed:
+                    mode_changed = True
+                    if mode == "single":
+                        mode = "player"
+                    elif mode == "player":
+                        mode = "single"
+            else:
+                mode_changed = False 
+        
+        elif game_state == "playing":    
             paddle_a.Move1()
-            #paddle_b.Move2()
-            if paddle_b.rect.y + paddle_b.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
-                paddle_b.paddble_b_up()
-            elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
-                paddle_b.paddble_b_down()
+            if mode == "player":
+                paddle_b.Move2()
+            elif mode == "single":
+                if paddle_b.rect.y + paddle_b.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                    paddle_b.paddble_b_up()
+                elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                    paddle_b.paddble_b_down()
             draw_objects()
             # ball.check_Hit_Atribute(test_ball)
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
@@ -104,7 +133,7 @@ if __name__ == '__main__' :
             draw_game_over(winner)
             keys = pg.key.get_pressed()
             if keys[pg.K_r]:
-                game_state = "playing"
+                game_state = "game_menu"
                 score_a = score_b = 0
                 ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
                 paddle_a.Reset(10,HEIGHT//2)

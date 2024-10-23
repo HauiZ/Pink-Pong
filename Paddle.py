@@ -35,6 +35,7 @@ class Paddle:
     def Reset(self,x,y):
         self.paddle_position = [x,y]
         self.rect = pygame.Rect( self.paddle_position[0], self.paddle_position[1], self.width, self.height)
+        self.speed = 10
     
     def paddble_b_up(self):
         if self.rect.top> 0:

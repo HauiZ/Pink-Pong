@@ -13,7 +13,7 @@ left = pg.mixer.Sound('leftplayer.wav')         #Thiết lập âm thanh của n
 right = pg.mixer.Sound('rightplayer.wav')       #Thiết lập âm thanh của người chơi bên phải
 
 class Ball:
-    ball_radius = 10
+    ball_radius = 15
     def __init__(self,ball_x,ball_y,window):
         self.lock = threading.Lock()
         self.ball_x = ball_x
@@ -30,10 +30,8 @@ class Ball:
 
     def Hit(self):
         self.ball_velocity[0] *= -1
-        if self.ball_velocity[0] > 0:
-            self.ball_velocity += [0,0]
-        else:
-            self.ball_velocity += [-0,0]
+        self.ball_velocity[0] += 1 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
+        self.ball_velocity[1] += 1 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
         pass
     def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
@@ -45,7 +43,7 @@ class Ball:
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
             bounce.play() 
-        self.ball_position = self.ball_position + self.ball_velocity      #lệnh chạy âm thanh
+        self.ball_position = self.ball_position + self.ball_velocity     
         pass
 
     def Reset(self, x, y):
@@ -55,7 +53,7 @@ class Ball:
         while ran == 0:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
-
+        self.ball_radius = 15
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
@@ -77,8 +75,9 @@ class Ball:
             self.ball_velocity[0] += 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
             self.ball_velocity[1] += 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
             time.sleep(5)
-            self.ball_velocity[0] -= 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
-            self.ball_velocity[1] -= 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
+            if (self.ball_velocity[0] <= -16 or self.ball_velocity[0] >= 16) and (self.ball_velocity[1] <= -16 or self.ball_velocity[1] >= 16):
+                self.ball_velocity[0] -= 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
+                self.ball_velocity[1] -= 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
 
         
     def check_Hit_Atribute_paddle_speed(self,ball_Atribute):
