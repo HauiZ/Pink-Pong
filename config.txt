@@ -1,0 +1,2 @@
+key_player_1=119,220
+key_player_2=1073741906
