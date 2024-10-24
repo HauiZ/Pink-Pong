@@ -19,6 +19,12 @@ combo_counterb = 0
 game_state = "game_menu"
 mode = "single"
 mode_changed = False
+mode_changed_1 = False
+mode_changed_2 = False
+mode_map = "map1"
+
+
+
 
 def draw_objects(window, background):
         
@@ -50,19 +56,50 @@ if __name__ == '__main__' :
                 exit()  # Thêm lệnh này để thoát chương trình hoàn toàn
         
         if game_state == "game_menu":
-            Draw.draw_game_menu(mode,screen)
+            Draw.draw_game_menu(mode,mode_map ,screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_SPACE]:
                 game_state = "playing"
-            elif keys[pg.K_r]:
+
+            if keys[pg.K_r]:
                 if not mode_changed:
                     mode_changed = True
                     if mode == "single":
                         mode = "player"
                     elif mode == "player":
                         mode = "single"
+                    
             else:
                 mode_changed = False 
+
+            if keys[pg.K_a]:
+                if not mode_changed_1:
+                    mode_changed_1 = True
+                    if mode_map == "map2":
+                        Draw.change_background('images/field.png')
+                        mode_map = "map1"
+                    elif mode_map == "map3":
+                        Draw.change_background('images/sand_field.png')
+                        mode_map = "map2"
+                    elif mode_map == "map1":
+                        Draw.change_background('images/space_field.png')
+                        mode_map = "map3"
+            else:
+                mode_changed_1 = False
+            if keys[pg.K_d]:
+                if not mode_changed_2:
+                    mode_changed_2 = True
+                    if mode_map == "map2":
+                        Draw.change_background('images/space_field.png')
+                        mode_map = "map3"
+                    elif mode_map == "map1":
+                        Draw.change_background('images/sand_field.png')
+                        mode_map = "map2"
+                    elif mode_map == "map3":
+                        Draw.change_background('images/field.png')
+                        mode_map = "map1"
+            else:
+                mode_changed_2 = False 
         
         elif game_state == "playing":    
             paddle_a.Move1()

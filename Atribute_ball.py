@@ -6,16 +6,14 @@ import GUI
 class Atribute_ball():
     speed = 'red'
     paddle_speed = 'blue'
-    map1 = 'green'
-    map2 = 'yellow'
-    map3 = 'black'
+    
     
     def __init__(self, ball_x, ball_y, window):
         self.ball_x = ball_x
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
         self.Gravity = 0.05
-        self.Atribute_list = [self.speed,self.paddle_speed,self.map1,self.map2,self.map3]
+        self.Atribute_list = [self.speed,self.paddle_speed]
         self.color = random.choice(self.Atribute_list)
         self.element = random.choice(self.Atribute_list)
         self.atribute = str(self.element)

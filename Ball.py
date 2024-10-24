@@ -39,14 +39,9 @@ class Ball:
     def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b, drawing):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
         atribute_paddle_speed = threading.Thread(target=self.run_check_Hit_Atribute_paddle_speed, args=(ball_Atribute, paddle_a, paddle_b,))
-        atribute_map1 = threading.Thread(target=self.run_check_Hit_Atribute_map1, args=(ball_Atribute, drawing, ))
-        atribute_map2 = threading.Thread(target=self.run_check_Hit_Atribute_map2, args=(ball_Atribute, drawing, ))
-        atribute_map3 = threading.Thread(target=self.run_check_Hit_Atribute_map3, args=(ball_Atribute, drawing, ))
         atribute_speed.start()
         atribute_paddle_speed.start()
-        atribute_map1.start()
-        atribute_map2.start()
-        atribute_map3.start()
+        
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
             bounce.play() 
@@ -103,29 +98,6 @@ class Ball:
                 time.sleep(5)
                 paddle_b.speed -= 10
 
-    def check_Hit_Atribute_map1(self,ball_Atribute):
-        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "green":
-            return True
-    def run_check_Hit_Atribute_map1(self,ball_Atribute, drawing):
-        if self.check_Hit_Atribute_map1(ball_Atribute) and ball_Atribute.hit == False:
-            ball_Atribute.hit = True
-            drawing.change_background('images/field.png')
-
-    def check_Hit_Atribute_map2(self,ball_Atribute):
-        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "yellow":
-            return True
-    def run_check_Hit_Atribute_map2(self,ball_Atribute, drawing):
-        if self.check_Hit_Atribute_map2(ball_Atribute) and ball_Atribute.hit == False:
-            ball_Atribute.hit = True
-            drawing.change_background('images/sand_field.png')
-
-    def check_Hit_Atribute_map3(self,ball_Atribute):
-        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "black":
-            return True
-    def run_check_Hit_Atribute_map3(self,ball_Atribute, drawing):
-        if self.check_Hit_Atribute_map3(ball_Atribute) and ball_Atribute.hit == False:
-            ball_Atribute.hit = True
-            drawing.change_background('images/space_field.png')
                 
 
     
