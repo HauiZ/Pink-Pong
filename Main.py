@@ -117,7 +117,7 @@ if __name__ == '__main__' :
                 score_b += 1
                 combo_counterb += 1
                 combo_countera = 0
-                ball.Reset(paddle_b.x+paddle_b.width+1, random.randint(paddle_b.y + 10,paddle_b.y+paddle_b.height-10 ))  # Đặt lại vị trí bóng
+                ball.Reset(paddle_b.x+paddle_b.width+10, random.randint(paddle_b.y + 10,paddle_b.y+paddle_b.height-10 ))  # Đặt lại vị trí bóng
                 if combo_counterb % 3 == 0:
                     cheer.set_volume(0.5)
                     cheer.play()    #lệnh chạy âm thanh
@@ -129,7 +129,7 @@ if __name__ == '__main__' :
                 score_a += 1
                 combo_countera += 1
                 combo_counterb = 0
-                ball.Reset(paddle_a.x+paddle_a.width+1, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ))  # Đặt lại vị trí bóng
+                ball.Reset(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ))  # Đặt lại vị trí bóng
                 if combo_countera % 3 == 0:
                     cheer.set_volume(0.5)
                     cheer.play()    
