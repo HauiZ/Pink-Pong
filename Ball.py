@@ -19,6 +19,7 @@ class Ball:
     ball_radius = 15
     def __init__(self,ball_x,ball_y,window):
         self.lock = threading.Lock()
+        self.font = pg.font.Font(None, 36)
         self.ball_x = ball_x
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
@@ -26,9 +27,13 @@ class Ball:
         self.color = "yellow"
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
 
+        self.text_atribute = " "
+        self.color_text_atribute = "white"
+        
+
     def Display(self,window):
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
-
+        
     
 
     def Hit(self):
@@ -39,12 +44,13 @@ class Ball:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
         pass
-    def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b, drawing):
+    def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b,window):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
         atribute_paddle_speed = threading.Thread(target=self.run_check_Hit_Atribute_paddle_speed, args=(ball_Atribute, paddle_a, paddle_b,))
         atribute_speed.start()
         atribute_paddle_speed.start()
-        
+        self.text = self.font.render(f"{self.text_atribute}", True, self.color_text_atribute)
+        window.blit(self.text, (WIDTH//2 - self.text.get_width()//2, HEIGHT - 25 - self.text.get_height()//2))
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
             bounce.play() 
@@ -79,14 +85,17 @@ class Ball:
             return True
     def run_check_Hit_Atribute_speed(self,ball_Atribute):
         if self.check_Hit_Atribute_speed(ball_Atribute) and ball_Atribute.hit == False:
-            print("Hit1")
             ball_Atribute.hit = True
             self.ball_velocity[0] += 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
             self.ball_velocity[1] += 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
+            self.text_atribute = "Atribute ball red update speed on ball x2!"
+            self.color_text_atribute = "red"
             time.sleep(5)
             if (self.ball_velocity[0] <= -16 or self.ball_velocity[0] >= 16) and (self.ball_velocity[1] <= -16 or self.ball_velocity[1] >= 16):
                 self.ball_velocity[0] -= 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
                 self.ball_velocity[1] -= 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
+            self.text_atribute = " "
+            
 
         
     def check_Hit_Atribute_paddle_speed(self,ball_Atribute):
@@ -94,16 +103,22 @@ class Ball:
             return True
     def run_check_Hit_Atribute_paddle_speed(self,ball_Atribute, paddle_a, paddle_b):
         if self.check_Hit_Atribute_paddle_speed(ball_Atribute) and ball_Atribute.hit == False:
-            print("Hit2")
+            
             ball_Atribute.hit = True
             if self.ball_velocity[0] > 0:
                 paddle_a.speed += 10
+                self.text_atribute = "Atribute ball blue update speed on paddle A x2!"
+                self.color_text_atribute = "blue"
                 time.sleep(5)
                 paddle_a.speed -= 10
+                self.text_atribute = " "
             else:
                 paddle_b.speed += 10
+                self.text_atribute = "Atribute ball blue update speed on paddle B x2!"
+                self.color_text_atribute = "blue"
                 time.sleep(5)
                 paddle_b.speed -= 10
+                self.text_atribute = " "
 
     def reset_ball_velocity(self):
         time.sleep(3)

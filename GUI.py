@@ -38,29 +38,21 @@ class Draw():
         text = self.font.render("Welcome to Pong!", True, "white")
         start = self.font.render("Press Space to start", True, "white")
         mode_game = self.font.render("Press R to switch mode : ", True, "white")
-        mode_game_left_txt = self.font.render(f"<<", True, "white")
         mode_game_changed = self.font.render(f"{mode}", True, mode_game_clolor)
-        mode_game_right_txt = self.font.render(f">>", True, "white")
-        mode_map_text = self.font.render("Press [A,D] to change map : ", True, "white")
+        mode_map_text = self.font.render("Press M to change map : ", True, "white")
         if mode_map == "map1":
             mode_map_color = "white"
         elif mode_map == "map2":
             mode_map_color = "yellow"
         else:
             mode_map_color = "blue"
-        mode_map_left_txt = self.font.render(f"<<", True, "white")
         mode_map_changed = self.font.render(f"{mode_map}", True, mode_map_color)
-        mode_map_right_txt = self.font.render(f">>", True, "white")
         table_surface.blit(text, (WIDTH * 0.16, 20))
         table_surface.blit(start, (WIDTH * 0.155, 60))
         table_surface.blit(mode_game, (WIDTH * 0.11, 100))
-        table_surface.blit(mode_game_left_txt, (WIDTH * 0.33, 100))
         table_surface.blit(mode_game_changed, (WIDTH * 0.36, 100))
-        table_surface.blit(mode_game_right_txt, (WIDTH * 0.42, 100))
         table_surface.blit(mode_map_text, (WIDTH * 0.11, 140))
-        table_surface.blit(mode_map_left_txt, (WIDTH * 0.35, 140))
-        table_surface.blit(mode_map_changed, (WIDTH * 0.38, 140))
-        table_surface.blit(mode_map_right_txt, (WIDTH * 0.44, 140))
+        table_surface.blit(mode_map_changed, (WIDTH * 0.36, 140))
         window.blit(self.background, (0, 0))
         window.blit(table_surface, (WIDTH//2 - table_surface.get_width()//2, HEIGHT//3))
     

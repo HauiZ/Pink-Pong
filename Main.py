@@ -20,7 +20,6 @@ game_state = "game_menu"
 mode = "single"
 mode_changed = False
 mode_changed_1 = False
-mode_changed_2 = False
 mode_map = "map1"
 
 
@@ -72,34 +71,21 @@ if __name__ == '__main__' :
             else:
                 mode_changed = False 
 
-            if keys[pg.K_a]:
+            if keys[pg.K_m]:
                 if not mode_changed_1:
                     mode_changed_1 = True
-                    if mode_map == "map2":
-                        Draw.change_background('images/field.png')
-                        mode_map = "map1"
-                    elif mode_map == "map3":
+                    if mode_map == "map1":
                         Draw.change_background('images/sand_field.png')
                         mode_map = "map2"
-                    elif mode_map == "map1":
+                    elif mode_map == "map2":
                         Draw.change_background('images/space_field.png')
                         mode_map = "map3"
+                    elif mode_map == "map3":
+                        Draw.change_background('images/field.png')
+                        mode_map = "map1"
             else:
                 mode_changed_1 = False
-            if keys[pg.K_d]:
-                if not mode_changed_2:
-                    mode_changed_2 = True
-                    if mode_map == "map2":
-                        Draw.change_background('images/space_field.png')
-                        mode_map = "map3"
-                    elif mode_map == "map1":
-                        Draw.change_background('images/sand_field.png')
-                        mode_map = "map2"
-                    elif mode_map == "map3":
-                        Draw.change_background('images/field.png')
-                        mode_map = "map1"
-            else:
-                mode_changed_2 = False 
+ 
         
         elif game_state == "playing":    
             paddle_a.Move1()
@@ -144,7 +130,7 @@ if __name__ == '__main__' :
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
                 
-            ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b, Draw)
+            ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b,screen)
             test_ball.Updateposition(HEIGHT,WIDTH)
 
         if score_a >= 10 or score_b >= 10:
