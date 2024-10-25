@@ -46,16 +46,20 @@ class Ball:
             self.ball_velocity[1] *= -1
             bounce.play() 
         self.ball_position = self.ball_position + self.ball_velocity     
+        
         pass
 
     def Reset(self, x, y):
+        
         self.ball_position = np.array([x, y], dtype=np.float64)
-        self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*6,6],dtype= np.float64)
+        self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*0,0],dtype= np.float64)
         ran = random.randint(-1, 1)
         while ran == 0:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
         self.ball_radius = 15
+        reset_speed = threading.Thread(target=self.reset_ball_velocity)
+        reset_speed.start()
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
@@ -98,8 +102,12 @@ class Ball:
                 time.sleep(5)
                 paddle_b.speed -= 10
 
-                
-
+    def reset_ball_velocity(self):
+        time.sleep(3)
+        if self.ball_velocity[0] != 0:
+            self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*6,6],dtype= np.float64)
+        else:
+            self.ball_velocity = np.array([6,6],dtype= np.float64)
     
 
 
