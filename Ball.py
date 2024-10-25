@@ -9,9 +9,9 @@ import GUI
 
 defaut_color = "yellow"
 pg.mixer.init()
-bounce = pg.mixer.Sound('bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
-left = pg.mixer.Sound('leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
-right = pg.mixer.Sound('rightplayer.wav')  
+bounce = pg.mixer.Sound('sound/bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
+left = pg.mixer.Sound('sound/leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
+right = pg.mixer.Sound('sound/rightplayer.wav')  
 WIDTH = 1400
 HEIGHT = 700   #Thiết lập âm thanh của người chơi bên phải
 
@@ -34,7 +34,10 @@ class Ball:
     def Hit(self):
         self.ball_velocity[0] *= -1
         self.ball_velocity[0] += 1 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
-        self.ball_velocity[1] += 1 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
+        ran = random.randint(-1, 1)
+        while ran == 0:
+            ran = random.randint(-1, 1)
+        self.ball_velocity[1] *= ran
         pass
     def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b, drawing):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 

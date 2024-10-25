@@ -39,8 +39,8 @@ def draw_objects(window, background):
 if __name__ == '__main__' : 
     pg.init()
     pg.mixer.init()
-    cheer = pg.mixer.Sound('Cheering.wav')  #Thiết lập âm thanh cổ động viên 
-    ohh = pg.mixer.Sound('ohh.wav')         #Thiết lp âm thanh cổ động viên
+    cheer = pg.mixer.Sound('sound/Cheering.wav')  #Thiết lập âm thanh cổ động viên 
+    ohh = pg.mixer.Sound('sound/ohh.wav')         #Thiết lp âm thanh cổ động viên
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
