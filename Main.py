@@ -10,18 +10,19 @@ import GUI
 WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
-pg.display.set_caption("Pong")
 color_def = "white"
-score_a = 0
-score_b = 0
-combo_countera = 0
-combo_counterb = 0
-game_state = "game_menu"
-mode = "single"
-mode_changed = False
-mode_changed_1 = False
-mode_map = "map1"
-
+score_a = 0 #score a
+score_b = 0 #score b
+combo_countera = 0 #combo counter a
+combo_counterb = 0 #combo counter b
+game_state = "game_menu" #game state
+mode = "single" #mode game
+mode_changed = False #mode changed
+mode_changed_1 = False #mode changed 1
+mode_changed_2 = False #mode changed 2
+clicked = False #clicked
+clicked_1 = False #clicked 1
+mode_map = "map1" #mode map
 
 
 
@@ -48,12 +49,19 @@ if __name__ == '__main__' :
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     Draw = GUI.Draw(screen)
     while True:
-        Draw.draw_map(screen)
-        for event in pg.event.get():
+        events = pg.event.get()
+        for event in events:
             if event.type == pg.QUIT:
                 pg.quit()
-                exit()  # Thêm lệnh này để thoát chương trình hoàn toàn
-        
+                exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    if game_state == "playing":
+                        game_state = "setting"
+                    elif game_state == "setting":
+                        game_state = "playing"
+
+        Draw.draw_map(screen)
         if game_state == "game_menu":
             Draw.draw_game_menu(mode,mode_map ,screen)
             keys = pg.key.get_pressed()
@@ -87,7 +95,19 @@ if __name__ == '__main__' :
                 mode_changed_1 = False
  
         
-        elif game_state == "playing":    
+        elif game_state == "setting":
+            Draw.draw_setting_menu(screen)
+            Draw.handle_settings_navigation(events)
+        
+        elif game_state == "playing": 
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    exit()
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        game_state = "setting"
+                        
             paddle_a.Move1()
             if mode == "player":
                 paddle_b.Move2()
