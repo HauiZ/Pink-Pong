@@ -170,13 +170,21 @@ class Draw():
     def handle_settings_navigation(self, events):
         for event in events:
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_m:
-                    if self.show_controller_panel:
-                        self.show_controller_panel = False
-                        self.is_binding_mode = False  # Reset binding mode when exiting
-                        chosed_sound.play()
-                    return False
-                
+                # Return to main settings menu with B key
+                if event.key == pg.K_b and self.show_controller_panel:
+                    self.show_controller_panel = False
+                    self.is_binding_mode = False
+                    chosed_sound.play()
+                    return True
+
+                # Open controller panel
+                if event.key == pg.K_RETURN or event.key == pg.K_KP_ENTER:
+                    if self.selected_option == 2:  # Only if CONTROLLER is selected
+                        if not self.show_controller_panel:
+                            self.show_controller_panel = True
+                            chosed_sound.play()
+                        return True
+
                 if self.show_controller_panel:
                     # Add navigation for controller panel
                     if not self.is_binding_mode:
@@ -380,6 +388,10 @@ class Draw():
     def show_notification(self, message):
         self.notification = message
         self.notification_start_time = pg.time.get_ticks()
+
+
+
+
 
 
 
