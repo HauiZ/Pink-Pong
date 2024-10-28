@@ -17,27 +17,30 @@ key_player_2= [defaut_up_player_2,defaut_down_player_2]# player 2
 
 
 def load_config():
+    global key_player_1, key_player_2
     try:
-        with open(file_config, "r") as file:
-            for line in file:
+        with open('config.txt', 'r') as f:
+            lines = f.readlines()
+            for line in lines:
                 if line.startswith("key_player_1="):
-                    keys = line.strip().split("=")[1].split(",")
-                    key_player_1[0] = int(keys[0])
-                    key_player_1[1] = int(keys[1])
+                    keys = line.strip().split('=')[1].split(',')
+                    key_player_1[0] = int(keys[0]) if keys[0] != 'None' else None
+                    key_player_1[1] = int(keys[1]) if keys[1] != 'None' else None
                 elif line.startswith("key_player_2="):
-                    keys = line.strip().split("=")[1].split(",")
-                    key_player_2[0] = int(keys[0])
-                    key_player_2[1] = int(keys[1])
-    except FileNotFoundError:
+                    keys = line.strip().split('=')[1].split(',')
+                    key_player_2[0] = int(keys[0]) if keys[0] != 'None' else None
+                    key_player_2[1] = int(keys[1]) if keys[1] != 'None' else None
+    except (FileNotFoundError, ValueError, IndexError):
+        # If there's any error loading the config, reset to defaults
         reset_key()
-        save_config()
 
 def save_config():
-    print("Saving config...")  # Debug print
     with open(file_config, "w") as file:
-        file.write(f"key_player_1={key_player_1[0]},{key_player_1[1]}\n")
-        file.write(f"key_player_2={key_player_2[0]},{key_player_2[1]}\n")
-    print("Config saved")  # Debug print
+        # Convert None values to 'None' strings when saving
+        p1_keys = [str(k) if k is not None else 'None' for k in key_player_1]
+        p2_keys = [str(k) if k is not None else 'None' for k in key_player_2]
+        file.write(f"key_player_1={p1_keys[0]},{p1_keys[1]}\n")
+        file.write(f"key_player_2={p2_keys[0]},{p2_keys[1]}\n")
 
 def set_key(player, keys):
     global key_player_1, key_player_2
@@ -60,5 +63,7 @@ def reset_key():
     save_config()
     print("Keys reset")  # Debug print
     
+
+
 
 

@@ -20,9 +20,10 @@ class Paddle:
         
     def Move(self, up_key, down_key):
         keys = pygame.key.get_pressed()
-        if keys[up_key] and self.rect.top > 0:
+        # Only move if the key is not None and is pressed
+        if up_key is not None and keys[up_key] and self.rect.top > 0:
             self.rect.y -= self.speed
-        if keys[down_key] and self.rect.bottom < 700:
+        if down_key is not None and keys[down_key] and self.rect.bottom < 700:
             self.rect.y += self.speed
         self.y = self.rect.y
 

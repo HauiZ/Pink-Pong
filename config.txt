@@ -1,2 +1,2 @@
-key_player_1=114,115
-key_player_2=1073741906,1073741905
+key_player_1=None,None
+key_player_2=101,1073741905

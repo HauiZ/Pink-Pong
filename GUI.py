@@ -42,6 +42,9 @@ class Draw():
         self.selected_control = 0  # Add this line to track selected control option
         self.is_binding_mode = False  # Add this new state variable
         config.load_config()  # Load config when initializing
+        self.notification = None
+        self.notification_start_time = 0
+        self.notification_duration = 2000  # 2 seconds in milliseconds
         
         
 
@@ -175,31 +178,58 @@ class Draw():
                     return False
                 
                 if self.show_controller_panel:
-                    # Controller panel navigation logic
+                    # Add navigation for controller panel
+                    if not self.is_binding_mode:
+                        if event.key == pg.K_UP:
+                            self.selected_control = (self.selected_control - 1) % len(self.controller_options)
+                            tick_sound.play()
+                        elif event.key == pg.K_DOWN:
+                            self.selected_control = (self.selected_control + 1) % len(self.controller_options)
+                            tick_sound.play()
+                    
                     if event.key == pg.K_SPACE:
                         self.is_binding_mode = not self.is_binding_mode
                         chosed_sound.play()
                         return False
 
+                    # Add save/reset shortcuts with notifications
+                    elif event.key == pg.K_s and not self.is_binding_mode:
+                        config.save_config()
+                        self.show_notification("Settings Saved!")
+                        chosed_sound.play()
+                    elif event.key == pg.K_r and not self.is_binding_mode:
+                        config.reset_key()
+                        self.show_notification("Settings Reset!")
+                        chosed_sound.play()
+
                     if self.is_binding_mode:
                         if event.key != pg.K_SPACE and event.key != pg.K_m:
+                            # Get current key configurations
+                            player1_keys = list(config.get_key_player_1())
+                            player2_keys = list(config.get_key_player_2())
+                            
+                            # Check if the key is already used
+                            if event.key in player1_keys + player2_keys:
+                                # Find and remove the duplicate key
+                                if event.key in player1_keys:
+                                    idx = player1_keys.index(event.key)
+                                    player1_keys[idx] = None
+                                    config.set_key(1, player1_keys)
+                                if event.key in player2_keys:
+                                    idx = player2_keys.index(event.key)
+                                    player2_keys[idx] = None
+                                    config.set_key(2, player2_keys)
+                            
+                            # Set the new key
                             if self.selected_control < 2:
-                                current_keys = list(config.get_key_player_1())
-                                current_keys[self.selected_control] = event.key
-                                config.set_key(1, current_keys)
+                                player1_keys[self.selected_control] = event.key
+                                config.set_key(1, player1_keys)
                             else:
-                                current_keys = list(config.get_key_player_2())
-                                current_keys[self.selected_control - 2] = event.key
-                                config.set_key(2, current_keys)
+                                player2_keys[self.selected_control - 2] = event.key
+                                config.set_key(2, player2_keys)
+                            
                             self.is_binding_mode = False
                             chosed_sound.play()
-                    else:
-                        if event.key == pg.K_UP:
-                            self.selected_control = max(0, self.selected_control - 1)
-                            tick_sound.play()
-                        elif event.key == pg.K_DOWN:
-                            self.selected_control = min(len(self.controller_options) - 1, self.selected_control + 1)
-                            tick_sound.play()
                 else:
                     # Main settings menu navigation logic
                     if event.key == pg.K_UP:
@@ -244,7 +274,7 @@ class Draw():
         return False
 
     def draw_controller_panel(self, surface, y_offset):
-        panel_width = 300
+        panel_width = 400  # Increased from 300
         panel_height = 350  # Increased height to accommodate buttons
         panel_x = surface.get_width()//2 - panel_width//2
         panel_y = y_offset - 50
@@ -255,8 +285,8 @@ class Draw():
         pg.draw.rect(panel_surface, (255, 255, 255), panel_surface.get_rect(), 2)
 
         # Get current key configurations
-        player1_keys = config.get_key_player_1()
-        player2_keys = config.get_key_player_2()
+        player1_keys = list(config.get_key_player_1())
+        player2_keys = list(config.get_key_player_2())
         all_keys = player1_keys + player2_keys
 
         # Calculate blink color using milliseconds for smoother transitions
@@ -267,9 +297,9 @@ class Draw():
         option_spacing = 50
         for i, option in enumerate(self.controller_options):
             # Draw option background
-            pg.draw.rect(panel_surface, (80, 80, 80), (20, 20 + i * option_spacing, 180, 35))
+            pg.draw.rect(panel_surface, (80, 80, 80), (20, 20 + i * option_spacing, 250, 35))  # Increased width from 180
             # Draw white rectangle on the right
-            key_box = pg.draw.rect(panel_surface, (255, 255, 255), (220, 20 + i * option_spacing, 60, 35))
+            key_box = pg.draw.rect(panel_surface, (255, 255, 255), (290, 20 + i * option_spacing, 90, 35))  # Adjusted x position from 220 and increased width from 60
 
             # Draw triangle only for selected option
             if i == self.selected_control:
@@ -286,9 +316,10 @@ class Draw():
             panel_surface.blit(option_text, (30, 25 + i * option_spacing))
 
             # Draw key name in white box
-            key_name = pg.key.name(all_keys[i]).upper()
+            key = all_keys[i]
+            key_name = pg.key.name(key).upper() if key is not None else ""
             key_text = self.settings_font.render(key_name, True, (0, 0, 0))
-            key_rect = key_text.get_rect(center=(250, 37 + i * option_spacing))
+            key_rect = key_text.get_rect(center=(335, 37 + i * option_spacing))  # Adjusted x position from 250
             panel_surface.blit(key_text, key_rect)
 
         # Draw Save and Reset buttons
@@ -313,15 +344,46 @@ class Draw():
         reset_text_rect = reset_text.get_rect(center=reset_button.center)
         panel_surface.blit(reset_text, reset_text_rect)
 
-        # Add binding mode indicator
+        # Update the help text to include save/reset instructions
         if self.is_binding_mode:
             binding_text = self.settings_font.render("Press any key to bind...", True, (255, 255, 0))
             panel_surface.blit(binding_text, (panel_width//2 - binding_text.get_width()//2, panel_height - 60))
         else:
             help_text = self.settings_font.render("Press SPACE to bind key", True, (200, 200, 200))
-            panel_surface.blit(help_text, (panel_width//2 - help_text.get_width()//2, panel_height - 60))
+            shortcut_text = self.settings_font.render("Press S to save, R to reset", True, (200, 200, 200))
+            panel_surface.blit(help_text, (panel_width//2 - help_text.get_width()//2, panel_height - 80))
+            panel_surface.blit(shortcut_text, (panel_width//2 - shortcut_text.get_width()//2, panel_height - 40))
+
+        # Draw notification if active
+        if self.notification and current_time - self.notification_start_time < self.notification_duration:
+            # Create semi-transparent background for notification
+            notification_surface = pg.Surface((300, 40))
+            notification_surface.fill((0, 0, 0))
+            notification_surface.set_alpha(200)
+            
+            # Calculate position for centered notification
+            notification_x = panel_width//2 - 150  # 300/2 = 150
+            notification_y = panel_height - 120
+            
+            # Draw notification background
+            panel_surface.blit(notification_surface, (notification_x, notification_y))
+            
+            # Draw notification text
+            notification_text = self.settings_font.render(self.notification, True, (255, 255, 255))
+            text_rect = notification_text.get_rect(center=(panel_width//2, notification_y + 20))
+            panel_surface.blit(notification_text, text_rect)
+        elif current_time - self.notification_start_time >= self.notification_duration:
+            self.notification = None
 
         surface.blit(panel_surface, (panel_x, panel_y))
+
+    def show_notification(self, message):
+        self.notification = message
+        self.notification_start_time = pg.time.get_ticks()
+
+
+
+
 
 
 
