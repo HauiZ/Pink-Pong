@@ -112,9 +112,9 @@ if __name__ == '__main__' :
             if mode == "player":
                 paddle_b.Move2()
             elif mode == "single":
-                if paddle_b.rect.y + paddle_b.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                if paddle_b.rect.y + paddle_b.rect.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_up()
-                elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                elif paddle_b.rect.y + paddle_b.rect.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_down()
             draw_objects(screen, Draw.background)
             # ball.check_Hit_Atribute(test_ball)

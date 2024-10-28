@@ -6,18 +6,19 @@ import GUI
 class Atribute_ball():
     speed = 'red'
     paddle_speed = 'blue'
-    
+    size_ball = 'green'
+    paddle_size = 'orange'
     
     def __init__(self, ball_x, ball_y, window):
         self.ball_x = ball_x
         self.ball_y = ball_y
         self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
         self.Gravity = 0.05
-        self.Atribute_list = [self.speed,self.paddle_speed]
+        self.Atribute_list = [self.speed,self.paddle_speed,self.size_ball,self.paddle_size]
         self.color = random.choice(self.Atribute_list)
         self.element = random.choice(self.Atribute_list)
         self.atribute = str(self.element)
-        self.ball_radius = 100
+        self.ball_radius = 50
         self.ball_velocity = np.array([0,0.5],dtype= np.float64)
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
         self.active = True

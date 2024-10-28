@@ -47,8 +47,12 @@ class Ball:
     def Updateposition(self, HEIGHT, ball_Atribute, paddle_a, paddle_b,window):
         atribute_speed = threading.Thread(target=self.run_check_Hit_Atribute_speed, args=(ball_Atribute,)) 
         atribute_paddle_speed = threading.Thread(target=self.run_check_Hit_Atribute_paddle_speed, args=(ball_Atribute, paddle_a, paddle_b,))
+        atribute_size_ball = threading.Thread(target=self.run_check_Hit_Atribute_size_ball, args=(ball_Atribute,))
+        atribute_paddle_size = threading.Thread(target=self.run_check_Hit_Atribute_paddle_size, args=(ball_Atribute, paddle_a, paddle_b,))
         atribute_speed.start()
         atribute_paddle_speed.start()
+        atribute_size_ball.start()
+        atribute_paddle_size.start()
         self.text = self.font.render(f"{self.text_atribute}", True, self.color_text_atribute)
         window.blit(self.text, (WIDTH//2 - self.text.get_width()//2, HEIGHT - 25 - self.text.get_height()//2))
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
@@ -72,11 +76,11 @@ class Ball:
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
-        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.height):  # Left boundary (bar width + ball radius)
+        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.rect.height):  # Left boundary (bar width + ball radius)
             self.ball_position[0] = 20
             left.play()
             self.Hit()
-        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.height):  # Right boundary
+        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.rect.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
             right.play()
             self.Hit()
@@ -88,7 +92,7 @@ class Ball:
             ball_Atribute.hit = True
             self.ball_velocity[0] += 10 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
             self.ball_velocity[1] += 10 * (abs(self.ball_velocity[1]) / self.ball_velocity[1])
-            self.text_atribute = "Atribute ball red update speed on ball x2!"
+            self.text_atribute = "Increases ball speed by 2 times!"
             self.color_text_atribute = "red"
             time.sleep(5)
             if (self.ball_velocity[0] <= -16 or self.ball_velocity[0] >= 16) and (self.ball_velocity[1] <= -16 or self.ball_velocity[1] >= 16):
@@ -107,17 +111,53 @@ class Ball:
             ball_Atribute.hit = True
             if self.ball_velocity[0] > 0:
                 paddle_a.speed += 10
-                self.text_atribute = "Atribute ball blue update speed on paddle A x2!"
+                self.text_atribute = "Increases the speed of paddle A by 2 times!"
                 self.color_text_atribute = "blue"
                 time.sleep(5)
                 paddle_a.speed -= 10
                 self.text_atribute = " "
             else:
                 paddle_b.speed += 10
-                self.text_atribute = "Atribute ball blue update speed on paddle B x2!"
+                self.text_atribute = "Increases the speed of paddle B by 2 times!"
                 self.color_text_atribute = "blue"
                 time.sleep(5)
                 paddle_b.speed -= 10
+                self.text_atribute = " "
+    
+    def check_Hit_Atribute_size_ball(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "green":
+            return True
+    def run_check_Hit_Atribute_size_ball(self,ball_Atribute):
+        if self.check_Hit_Atribute_size_ball(ball_Atribute) and ball_Atribute.hit == False:
+            ball_Atribute.hit = True
+            self.ball_radius *= 2
+            self.text_atribute = "Increases ball size by 2 times!"
+            self.color_text_atribute = "green"
+            time.sleep(5)
+            if self.ball_radius > 15:
+                self.ball_radius /= 2
+            self.text_atribute = " "
+
+    def check_Hit_Atribute_paddle_size(self,ball_Atribute):
+        if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "orange":
+            return True
+    def run_check_Hit_Atribute_paddle_size(self,ball_Atribute, paddle_a, paddle_b):
+        if self.check_Hit_Atribute_paddle_size(ball_Atribute) and ball_Atribute.hit == False:
+            
+            ball_Atribute.hit = True
+            if self.ball_velocity[0] > 0:
+                paddle_a.rect.height *= 2
+                self.text_atribute = "Increases the height of paddle A by 2 times!"
+                self.color_text_atribute = "orange"
+                time.sleep(5)
+                paddle_a.rect.height /= 2
+                self.text_atribute = " "
+            else:
+                paddle_b.rect.height *= 2
+                self.text_atribute = "Increases the height of paddle B by 2 times!"
+                self.color_text_atribute = "orange"
+                time.sleep(5)
+                paddle_b.rect.height /= 2
                 self.text_atribute = " "
 
     def reset_ball_velocity(self):
