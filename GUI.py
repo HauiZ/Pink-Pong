@@ -38,11 +38,14 @@ class Draw():
         self.show_controller_panel = False
         self.controller_options = ["Player1_UP", "Player1_DOWN", "Player2_UP", "Player2_DOWN"]
         self.audio_options = ["MUSIC", "SFX"]  # Add audio options
-        self.selected_audio = 0  # Add selected audio tracker
+        self.selected_audio = 0  # Initialize selected_audio
+        self.is_inputting_volume = False  # Initialize is_inputting_volume
+        self.current_volume_input = ""  # Initialize current_volume_input
         self.show_audio_panel = False  # Add audio panel state
         self.selected_control = 0  # Add this line to track selected control option
         self.is_binding_mode = False  # Add this new state variable
         Controller_config.load_config()  # Load config when initializing
+        Sound_config.load_sound_config()
         self.notification = None
         self.notification_start_time = 0
         self.notification_duration = 2000  # 2 seconds in milliseconds
@@ -201,28 +204,72 @@ class Draw():
                         self.show_controller_panel = False
                         self.show_audio_panel = False
                         self.is_binding_mode = False
+                        self.is_inputting_volume = False
                         Sound_config.chosed_sound.play()
                         return True
 
-                if event.key == pg.K_RETURN or event.key == pg.K_KP_ENTER:
-                    if self.selected_option == 2:  # CONTROLLER
-                        if not self.show_controller_panel:
-                            self.show_controller_panel = True
-                            Sound_config.chosed_sound.play()
+                if self.show_audio_panel:
+                    # Add save and reset functionality for audio panel
+                    if event.key == pg.K_s and not self.is_inputting_volume:
+                        Sound_config.save_sound_config()
+                        self.show_notification("Audio Settings Saved!")
+                        Sound_config.chosed_sound.play()
                         return True
-                    elif self.selected_option == 1:  # AUDIO
-                        if not self.show_audio_panel:
-                            self.show_audio_panel = True
-                            Sound_config.chosed_sound.play()
+                    elif event.key == pg.K_r and not self.is_inputting_volume:
+                        Sound_config.Reset_sound_config()
+                        self.show_notification("Audio Settings Reset!")
+                        Sound_config.chosed_sound.play()
                         return True
 
-                if self.show_audio_panel:
-                    if event.key == pg.K_UP:
-                        self.selected_audio = (self.selected_audio - 1) % 4  # Use 4 for the number of audio options
-                        Sound_config.tick_sound.play()
-                    elif event.key == pg.K_DOWN:
-                        self.selected_audio = (self.selected_audio + 1) % 4  # Use 4 for the number of audio options
-                        Sound_config.tick_sound.play()
+                    # Handle audio panel navigation first
+                    if not self.is_inputting_volume:
+                        if event.key == pg.K_UP:
+                            self.selected_audio = (self.selected_audio - 1) % 4
+                            Sound_config.tick_sound.play()
+                            return True
+                        elif event.key == pg.K_DOWN:
+                            self.selected_audio = (self.selected_audio + 1) % 4
+                            Sound_config.tick_sound.play()
+                            return True
+                        elif event.key == pg.K_SPACE:
+                            self.is_inputting_volume = True
+                            self.current_volume_input = ""
+                            Sound_config.chosed_sound.play()
+                            return True
+                    else:  # is_inputting_volume is True
+                        if event.key == pg.K_RETURN:
+                            if self.current_volume_input:
+                                try:
+                                    volume = int(self.current_volume_input) / 100
+                                    if 0 <= volume <= 1:
+                                        if self.selected_audio == 0:
+                                            Sound_config.SetMaster_volume(volume)
+                                        elif self.selected_audio == 1:
+                                            Sound_config.SetCheering_volume(volume)
+                                        elif self.selected_audio == 2:
+                                            Sound_config.SetBall_volume(volume)
+                                        elif self.selected_audio == 3:
+                                            Sound_config.SetSFX_volume(volume)
+                                except ValueError:
+                                    pass
+                            self.is_inputting_volume = False
+                            Sound_config.chosed_sound.play()
+                            return True
+                        elif event.key == pg.K_BACKSPACE:
+                            self.current_volume_input = self.current_volume_input[:-1]
+                            return True
+                        elif event.key == pg.K_ESCAPE:
+                            self.is_inputting_volume = False
+                            self.current_volume_input = ""
+                            return True
+                        elif event.unicode.isnumeric():
+                            if len(self.current_volume_input) < 3:
+                                new_value = self.current_volume_input + event.unicode
+                                if not new_value or 0 <= int(new_value) <= 100:
+                                    self.current_volume_input = new_value
+                            return True
+                        return True  # Block all other keys while inputting
+
                 elif self.show_controller_panel:
                     # Thêm điều hướng cho bảng điều khiển
                     if not self.is_binding_mode:
@@ -294,34 +341,6 @@ class Draw():
                         elif self.selected_option == 3:  # MENU
                             Sound_config.chosed_sound.play()
                             return "game_menu"  # Return to game menu
-            elif event.type == pg.MOUSEBUTTONDOWN and self.show_controller_panel:
-                mouse_x, mouse_y = pg.mouse.get_pos()
-                
-                # Calculate the exact positions matching draw_controller_panel
-                panel_width = WIDTH * 0.5
-                panel_height = HEIGHT * 0.6
-                panel_x = WIDTH//2 - panel_width//2
-                panel_y = HEIGHT//2 - panel_height//2
-                
-                button_width = 100
-                button_height = 40
-                button_y = panel_y + 220  # Match the button_y in draw_controller_panel
-                
-                # Save button (left button)
-                save_x = panel_x + panel_width//4 - button_width//2
-                if (save_x <= mouse_x <= save_x + button_width and 
-                    button_y <= mouse_y <= button_y + button_height):
-                    print("Save clicked")  # Debug print
-                    Controller_config.save_config()
-                    Sound_config.chosed_sound.play()
-                
-                # Reset button (right button)
-                reset_x = panel_x + 3*panel_width//4 - button_width//2
-                if (reset_x <= mouse_x <= reset_x + button_width and 
-                    button_y <= mouse_y <= button_y + button_height):
-                    print("Reset clicked")  # Debug print
-                    Controller_config.reset_key()
-                    Sound_config.chosed_sound.play()
         
         return False
 
@@ -433,10 +452,11 @@ class Draw():
     def show_notification(self, message):
         self.notification = message
         self.notification_start_time = pg.time.get_ticks()
+        self.notification_duration = 2000  # 2 seconds in milliseconds
 
     def draw_audio_panel(self, surface, y_offset):
         panel_width = 400
-        panel_height = 350
+        panel_height = 400
         panel_x = surface.get_width()//2 - panel_width//2
         panel_y = y_offset - 50
 
@@ -457,12 +477,28 @@ class Draw():
         current_time = pg.time.get_ticks()
         blink_color = "red" if (current_time // self.blink_interval) % 2 == 0 else "blue"
 
+        # Add is_inputting_volume state
+        if not hasattr(self, 'is_inputting_volume'):
+            self.is_inputting_volume = False
+            self.current_volume_input = ""
+
         # Draw volume controls
         option_spacing = 60
         for i, option in enumerate(audio_options):
             # Draw option text
             option_text = self.settings_font.render(option, True, (255, 255, 255))
             panel_surface.blit(option_text, (30, 40 + i * option_spacing))
+
+            # Get current volume based on option
+            current_volume = "100"  # You'll need to get the actual volume here
+            if i == 0:
+                current_volume = str(int(Sound_config.Master_volume * 100))
+            elif i == 1:
+                current_volume = str(int(Sound_config.Cheering_volume * 100))
+            elif i == 2:
+                current_volume = str(int(Sound_config.Ball_volume * 100))
+            elif i == 3:
+                current_volume = str(int(Sound_config.SFX_volume * 100))
 
             # Draw volume box
             volume_box = pg.draw.rect(panel_surface, 
@@ -485,10 +521,51 @@ class Draw():
                     (volume_box.right + 20 + triangle_size, volume_box.centery + triangle_size//2)
                 ])
 
-            # Draw volume value
-            volume_text = self.settings_font.render("100", True, (0, 0, 0))
+            # Draw volume value or input
+            if self.is_inputting_volume and i == self.selected_audio:
+                input_text = self.current_volume_input + "_" if (pg.time.get_ticks() // 500) % 2 == 0 else self.current_volume_input
+                volume_text = self.settings_font.render(input_text, True, (0, 0, 0))
+            else:
+                volume_text = self.settings_font.render(current_volume, True, (0, 0, 0))
+            
             volume_rect = volume_text.get_rect(center=volume_box.center)
             panel_surface.blit(volume_text, volume_rect)
+
+        # Add instructions section at the bottom
+        instructions_y = 280  # Position for instructions
+        instruction_spacing = 25
+        instructions = [
+            "SPACE: Edit volume",
+            "ENTER: Confirm volume",
+            "S: Save settings",
+            "R: Reset to default"
+        ]
+
+        for i, instruction in enumerate(instructions):
+            instruction_text = self.settings_font.render(instruction, True, (200, 200, 200))
+            x_pos = panel_width//2 - instruction_text.get_width()//2
+            panel_surface.blit(instruction_text, (x_pos, instructions_y + i * instruction_spacing))
+
+        # Draw notification if active
+        if self.notification and pg.time.get_ticks() - self.notification_start_time < self.notification_duration:
+            # Create semi-transparent background for notification
+            notification_surface = pg.Surface((300, 40))
+            notification_surface.fill((0, 0, 0))
+            notification_surface.set_alpha(200)
+            
+            # Calculate position for centered notification
+            notification_x = panel_width//2 - 150  # 300/2 = 150
+            notification_y = panel_height - 120
+            
+            # Draw notification background
+            panel_surface.blit(notification_surface, (notification_x, notification_y))
+            
+            # Draw notification text
+            notification_text = self.settings_font.render(self.notification, True, (255, 255, 255))
+            text_rect = notification_text.get_rect(center=(panel_width//2, notification_y + 20))
+            panel_surface.blit(notification_text, text_rect)
+        elif current_time - self.notification_start_time >= self.notification_duration:
+            self.notification = None
 
         surface.blit(panel_surface, (panel_x, panel_y))
 

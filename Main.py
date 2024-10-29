@@ -24,7 +24,7 @@ clicked_1 = False #clicked 1
 mode_map = "map1" #mode map
 
 
-
+ 
 def draw_objects(window, background):
         
     window.blit(background, (0, 0))

@@ -1,4 +1,4 @@
-Master_volume = 1
+Master_volume = 0.0
 Cheering_volume = 1
 Ball_volume = 1
 SFX_volume = 1
