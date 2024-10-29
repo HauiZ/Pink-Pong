@@ -7,7 +7,7 @@ import Atribute_ball
 import threading
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-import config  # Add this import at the top of the file
+import Controller_config  # Add this import at the top of the file
 
 pg.mixer.init()
 WIDTH = 1400
@@ -41,7 +41,7 @@ class Draw():
         self.controller_options = ["Player1_UP", "Player1_DOWN", "Player2_UP", "Player2_DOWN"]
         self.selected_control = 0  # Add this line to track selected control option
         self.is_binding_mode = False  # Add this new state variable
-        config.load_config()  # Load config when initializing
+        Controller_config.load_config()  # Load config when initializing
         self.notification = None
         self.notification_start_time = 0
         self.notification_duration = 2000  # 2 seconds in milliseconds
@@ -220,19 +220,19 @@ class Draw():
 
                     # Add save/reset shortcuts with notifications
                     elif event.key == pg.K_s and not self.is_binding_mode:
-                        config.save_config()
+                        Controller_config.save_config()
                         self.show_notification("Settings Saved!")
                         chosed_sound.play()
                     elif event.key == pg.K_r and not self.is_binding_mode:
-                        config.reset_key()
+                        Controller_config.reset_key()
                         self.show_notification("Settings Reset!")
                         chosed_sound.play()
 
                     if self.is_binding_mode:
                         if event.key != pg.K_SPACE and event.key != pg.K_m:
                             # Get current key configurations
-                            player1_keys = list(config.get_key_player_1())
-                            player2_keys = list(config.get_key_player_2())
+                            player1_keys = list(Controller_config.get_key_player_1())
+                            player2_keys = list(Controller_config.get_key_player_2())
                             
                             # Check if the key is already used
                             if event.key in player1_keys + player2_keys:
@@ -240,19 +240,19 @@ class Draw():
                                 if event.key in player1_keys:
                                     idx = player1_keys.index(event.key)
                                     player1_keys[idx] = None
-                                    config.set_key(1, player1_keys)
+                                    Controller_config.set_key(1, player1_keys)
                                 if event.key in player2_keys:
                                     idx = player2_keys.index(event.key)
                                     player2_keys[idx] = None
-                                    config.set_key(2, player2_keys)
+                                    Controller_config.set_key(2, player2_keys)
                             
                             # Set the new key
                             if self.selected_control < 2:
                                 player1_keys[self.selected_control] = event.key
-                                config.set_key(1, player1_keys)
+                                Controller_config.set_key(1, player1_keys)
                             else:
                                 player2_keys[self.selected_control - 2] = event.key
-                                config.set_key(2, player2_keys)
+                                Controller_config.set_key(2, player2_keys)
                             
                             self.is_binding_mode = False
                             chosed_sound.play()
@@ -286,7 +286,7 @@ class Draw():
                 if (save_x <= mouse_x <= save_x + button_width and 
                     button_y <= mouse_y <= button_y + button_height):
                     print("Save clicked")  # Debug print
-                    config.save_config()
+                    Controller_config.save_config()
                     chosed_sound.play()
                 
                 # Reset button (right button)
@@ -294,7 +294,7 @@ class Draw():
                 if (reset_x <= mouse_x <= reset_x + button_width and 
                     button_y <= mouse_y <= button_y + button_height):
                     print("Reset clicked")  # Debug print
-                    config.reset_key()
+                    Controller_config.reset_key()
                     chosed_sound.play()
         
         return False
@@ -311,8 +311,8 @@ class Draw():
         pg.draw.rect(panel_surface, (255, 255, 255), panel_surface.get_rect(), 2)
 
         # Get current key configurations
-        player1_keys = list(config.get_key_player_1())
-        player2_keys = list(config.get_key_player_2())
+        player1_keys = list(Controller_config.get_key_player_1())
+        player2_keys = list(Controller_config.get_key_player_2())
         all_keys = player1_keys + player2_keys
 
         # Calculate blink color using milliseconds for smoother transitions
