@@ -50,8 +50,8 @@ class Draw():
 
     def draw_game_menu(self,mode,mode_map,window):
         table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.3)) 
-        table_surface.fill((0, 0, 0)) 
-        pg.draw.rect(table_surface, (255, 255, 255), table_surface.get_rect(), 10)  
+        table_surface.fill((255, 255, 255)) 
+        pg.draw.rect(table_surface, (0, 0, 0), table_surface.get_rect(), border_radius=40)  
         mode_game_clolor = "green" if mode == "single" else "red"
         text = self.font.render("Welcome to Pong!", True, "white")
         start = self.font.render("Press Space to start", True, "white")
@@ -75,13 +75,34 @@ class Draw():
         window.blit(table_surface, (WIDTH//2 - table_surface.get_width()//2, HEIGHT//3))
     
 
-    def draw_game_over(self,winner,window):
-        window.blit(self.background, (0, 0))
-        text = self.font.render(f"Player {winner} win!", True, "red")
-        restart = self.font.render("Press R to restart", True, "red")
-        window.blit(text, (WIDTH//2 - text.get_width()//2, HEIGHT//3))
-        window.blit(restart, (WIDTH//2 - restart.get_width()//2, HEIGHT//2))
-        
+    def draw_game_over(self, winner, window):
+        # Vẽ nền
+        window.blit(self.background, (0, 0))  # Vẽ hình nền
+        # Tạo bảng Game Over
+        table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.4), pg.SRCALPHA)  # Nền trong suốt
+        pg.draw.rect(table_surface, (0, 0, 0, 200), table_surface.get_rect(), border_radius=20)  # Bảng Game Over với góc bo tròn
+
+        # Tạo văn bản
+        title_font = pg.font.Font(None, 64)  # Phông chữ cho tiêu đề
+        option_font = pg.font.Font(None, 36)  # Phông chữ cho các tùy chọn
+
+        # Tạo văn bản
+        game_over_text = title_font.render("GAME OVER", True, (255, 0, 0))  # Màu đỏ
+        winner_text = option_font.render(f"Winner: {winner}", True, (255, 215, 0))  # Màu vàng
+        replay_text = option_font.render("Press R to Replay", True, (0, 255, 0))  # Màu xanh lá
+
+        # Vẽ văn bản lên bảng
+        table_surface.blit(game_over_text, (table_surface.get_width() // 2 - game_over_text.get_width() // 2, 20))  # Căn giữa tiêu đề
+        table_surface.blit(winner_text, (table_surface.get_width() // 2 - winner_text.get_width() // 2, 100))  # Căn giữa tên người thắng
+        table_surface.blit(replay_text, (table_surface.get_width() // 2 - replay_text.get_width() // 2, 160))  # Căn giữa tùy chọn chơi lại
+
+        # Vẽ bảng Game Over lên cửa sổ
+        window.blit(table_surface, (WIDTH // 2 - table_surface.get_width() // 2, HEIGHT // 2 - table_surface.get_height() // 2))
+
+        # Hiệu ứng nhấp nháy cho văn bản
+        current_time = pg.time.get_ticks()
+        if (current_time // 500) % 2 == 0:  # Nhấp nháy mỗi 500ms
+            window.blit(game_over_text, (table_surface.get_width() // 2 - game_over_text.get_width() // 2, 20))  # Vẽ lại tiêu đề
 
     def draw_map(self,window):
         with self.lock:

@@ -40,7 +40,9 @@ if __name__ == '__main__' :
     pg.init()
     pg.mixer.init()
     cheer = pg.mixer.Sound('sound/Cheering.wav')  #Thiết lập âm thanh cổ động viên 
-    ohh = pg.mixer.Sound('sound/ohh.wav')         #Thiết lp âm thanh cổ động viên
+    ohh = pg.mixer.Sound('sound/ohh.wav')
+    tick_sound = pg.mixer.Sound('sound/tick_sound.mp3')
+    chosed_sound = pg.mixer.Sound('sound/chosed_sound.mp3')         
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
@@ -66,11 +68,15 @@ if __name__ == '__main__' :
             Draw.draw_game_menu(mode,mode_map ,screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_SPACE]:
+                chosed_sound.set_volume(0.7)
+                chosed_sound.play()
                 game_state = "playing"
 
             if keys[pg.K_r]:
                 if not mode_changed:
                     mode_changed = True
+                    tick_sound.set_volume(0.7)
+                    tick_sound.play()
                     if mode == "single":
                         mode = "player"
                     elif mode == "player":
@@ -82,6 +88,8 @@ if __name__ == '__main__' :
             if keys[pg.K_m]:
                 if not mode_changed_1:
                     mode_changed_1 = True
+                    tick_sound.set_volume(0.7)
+                    tick_sound.play()
                     if mode_map == "map1":
                         Draw.change_background('images/sand_field.png')
                         mode_map = "map2"
@@ -112,9 +120,9 @@ if __name__ == '__main__' :
             if mode == "player":
                 paddle_b.Move2()
             elif mode == "single":
-                if paddle_b.rect.y + paddle_b.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                if paddle_b.rect.y + paddle_b.rect.height/2 > int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_up()
-                elif paddle_b.rect.y + paddle_b.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
+                elif paddle_b.rect.y + paddle_b.rect.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_down()
             draw_objects(screen, Draw.background)
             # ball.check_Hit_Atribute(test_ball)
@@ -159,6 +167,8 @@ if __name__ == '__main__' :
             Draw.draw_game_over(winner, screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_r]:
+                chosed_sound.set_volume(0.7)
+                chosed_sound.play()
                 game_state = "game_menu"
                 Draw.change_background('images/field.png')
                 Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))
