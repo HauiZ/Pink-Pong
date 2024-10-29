@@ -52,7 +52,12 @@ class Ball:
         atribute_paddle_size.start()
         self.text = self.font.render(f"{self.text_atribute}", True, self.color_text_atribute)
         window.blit(self.text, (WIDTH//2 - self.text.get_width()//2, HEIGHT - 25 - self.text.get_height()//2))
-        if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
+        if self.ball_position[1] <= 0 + 5:
+            self.ball_position[1] = 5
+            self.ball_velocity[1] *= -1
+            Sound_config.bounce.play()
+        elif self.ball_position[1] >= HEIGHT - 5:
+            self.ball_position[1] = HEIGHT - 5
             self.ball_velocity[1] *= -1
             Sound_config.bounce.play() 
         self.ball_position = self.ball_position + self.ball_velocity     
