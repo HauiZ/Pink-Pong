@@ -8,7 +8,7 @@ import Sound_config
 
 defaut_color = "yellow"
   #Thiết lập âm thanh của người chơi bên trái
-right = pg.mixer.Sound('sound/rightplayer.wav')  
+
 WIDTH = 1400
 HEIGHT = 700   #Thiết lập âm thanh của người chơi bên phải
 
@@ -79,7 +79,7 @@ class Ball:
             self.Hit()
         elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.rect.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
-            right.play()
+            Sound_config.right.play()
             self.Hit()
     def check_Hit_Atribute_speed(self,ball_Atribute):
         if self.ball.colliderect(ball_Atribute.ball) and ball_Atribute.color == "red":

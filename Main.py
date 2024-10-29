@@ -60,6 +60,8 @@ if __name__ == '__main__' :
 
         Draw.draw_map(screen)
         if game_state == "game_menu":
+            
+
             Draw.draw_game_menu(mode,mode_map ,screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_SPACE]:
@@ -99,7 +101,10 @@ if __name__ == '__main__' :
         
         elif game_state == "setting":
             Draw.draw_setting_menu(screen)
-            Draw.handle_settings_navigation(events)
+            result = Draw.handle_settings_navigation(events)
+            if result == "game_menu":
+                game_state = "game_menu"
+                Sound_config.chosed_sound.play()
         
         elif game_state == "playing": 
             for event in pg.event.get():
