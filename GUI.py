@@ -54,7 +54,7 @@ class Draw():
         table_surface.fill((0, 0, 0)) 
         pg.draw.rect(table_surface, (255, 255, 255), table_surface.get_rect(), 10)  
         mode_game_clolor = "green" if mode == "single" else "red"
-        text = self.font.render("Welcome to Pong!", True, "white")
+        text = self.font.render("Welcome to Pong!", True, "red")
         start = self.font.render("Press Space to start", True, "white")
         mode_game = self.font.render("Press R to switch mode : ", True, "white")
         mode_game_changed = self.font.render(f"{mode}", True, mode_game_clolor)
@@ -66,7 +66,9 @@ class Draw():
         else:
             mode_map_color = "blue"
         mode_map_changed = self.font.render(f"{mode_map}", True, mode_map_color)
-        table_surface.blit(text, (WIDTH * 0.16, 20))
+        current_time = pg.time.get_ticks()
+        if (current_time // 500) % 2 == 0:
+            table_surface.blit(text, (WIDTH * 0.16, 20))
         table_surface.blit(start, (WIDTH * 0.155, 60))
         table_surface.blit(mode_game, (WIDTH * 0.11, 100))
         table_surface.blit(mode_game_changed, (WIDTH * 0.36, 100))
