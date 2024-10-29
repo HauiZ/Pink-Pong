@@ -1,5 +1,3 @@
-from os import environ
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame as pg
 import numpy as np
 import Ball
@@ -7,6 +5,7 @@ import Paddle
 import random
 import Atribute_ball
 import GUI 
+import Sound_config
 WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -38,11 +37,7 @@ def draw_objects(window, background):
 
 if __name__ == '__main__' : 
     pg.init()
-    pg.mixer.init()
-    cheer = pg.mixer.Sound('sound/Cheering.wav')  #Thiết lập âm thanh cổ động viên 
-    ohh = pg.mixer.Sound('sound/ohh.wav')
-    tick_sound = pg.mixer.Sound('sound/tick_sound.mp3')
-    chosed_sound = pg.mixer.Sound('sound/chosed_sound.mp3')         
+        
     clock = pg.time.Clock()
     ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
@@ -68,15 +63,15 @@ if __name__ == '__main__' :
             Draw.draw_game_menu(mode,mode_map ,screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_SPACE]:
-                chosed_sound.set_volume(0.7)
-                chosed_sound.play()
+                
+                Sound_config.chosed_sound.play()
                 game_state = "playing"
 
             if keys[pg.K_r]:
                 if not mode_changed:
                     mode_changed = True
-                    tick_sound.set_volume(0.7)
-                    tick_sound.play()
+                    
+                    Sound_config.tick_sound.play()
                     if mode == "single":
                         mode = "player"
                     elif mode == "player":
@@ -88,8 +83,7 @@ if __name__ == '__main__' :
             if keys[pg.K_m]:
                 if not mode_changed_1:
                     mode_changed_1 = True
-                    tick_sound.set_volume(0.7)
-                    tick_sound.play()
+                    Sound_config.tick_sound.play()
                     if mode_map == "map1":
                         Draw.change_background('images/sand_field.png')
                         mode_map = "map2"
@@ -133,24 +127,24 @@ if __name__ == '__main__' :
                 combo_countera = 0
                 ball.Reset(paddle_b.x+paddle_b.width+10, random.randint(paddle_b.y + 10,paddle_b.y+paddle_b.height-10 ))  # Đặt lại vị trí bóng
                 if combo_counterb % 3 == 0:
-                    cheer.set_volume(0.5)
-                    cheer.play()    #lệnh chạy âm thanh
+                    
+                    Sound_config.cheer.play()    #lệnh chạy âm thanh
                     combo_counterb = 0
                 elif score_a - score_b >= 4 and combo_counterb == 1:
-                    ohh.set_volume(0.7)
-                    ohh.play()
+                    
+                    Sound_config.ohh.play()
             if ball.ball_position[0] >= WIDTH - 5:
                 score_a += 1
                 combo_countera += 1
                 combo_counterb = 0
                 ball.Reset(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ))  # Đặt lại vị trí bóng
                 if combo_countera % 3 == 0:
-                    cheer.set_volume(0.5)
-                    cheer.play()    
+                    
+                    Sound_config.cheer.play()   
                     combo_countera = 0
                 elif score_b - score_a >= 4 and combo_countera == 1:
-                    ohh.set_volume(0.7)
-                    ohh.play()
+                    
+                    Sound_config.ohh.play()
             if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
@@ -167,8 +161,7 @@ if __name__ == '__main__' :
             Draw.draw_game_over(winner, screen)
             keys = pg.key.get_pressed()
             if keys[pg.K_r]:
-                chosed_sound.set_volume(0.7)
-                chosed_sound.play()
+                Sound_config.chosed_sound.play()
                 game_state = "game_menu"
                 Draw.change_background('images/field.png')
                 Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))

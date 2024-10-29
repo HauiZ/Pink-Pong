@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-import config
+import Controller_config
 defaut_color = "white"
 
 class Paddle:
@@ -28,10 +28,10 @@ class Paddle:
         self.y = self.rect.y
 
     def Move1(self):
-        self.Move(config.get_key_player_1()[0],config.get_key_player_1()[1])
+        self.Move(Controller_config.get_key_player_1()[0],Controller_config.get_key_player_1()[1])
 
     def Move2(self):
-        self.Move(config.get_key_player_2()[0],config.get_key_player_2()[1])
+        self.Move(Controller_config.get_key_player_2()[0],Controller_config.get_key_player_2()[1])
 
     def Reset(self,x,y):
         self.paddle_position = [x,y]

@@ -5,11 +5,10 @@ import Paddle
 import random
 import Atribute_ball
 import threading
-from os import environ
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import Sound_config
 import Controller_config  # Add this import at the top of the file
 
-pg.mixer.init()
+
 WIDTH = 1400
 HEIGHT = 700
 color_def = "white"
@@ -20,8 +19,7 @@ combo_counterb = 0
 game_state = "game_menu"
 mode = "single"
 mode_changed = False
-tick_sound = pg.mixer.Sound('sound/tick_sound.mp3')
-chosed_sound = pg.mixer.Sound('sound/chosed_sound.mp3')
+
 
 class Draw():
     def __init__(self,window):
@@ -45,6 +43,9 @@ class Draw():
         self.notification = None
         self.notification_start_time = 0
         self.notification_duration = 2000  # 2 seconds in milliseconds
+        self.show_sfx_panel = False  # Initialize show_sfx_panel
+        self.volume_levels = [0.8, 0.6, 0.4, 0.7]  # Initial volume levels
+        self.active_slider = None  # Track which slider is being adjusted
         
         
 
@@ -174,6 +175,15 @@ class Draw():
             
             window.blit(self.background, (0, 0))
             window.blit(table_surface, (WIDTH//2 - table_surface.get_width()//2, HEIGHT//2 - table_surface.get_height()//2))
+        elif self.show_sfx_panel:
+            table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.6))
+            table_surface.fill((0, 0, 0))
+            pg.draw.rect(table_surface, (255, 255, 255), table_surface.get_rect(), 10)
+            
+            self.draw_sfx_panel(table_surface, 60)
+            
+            window.blit(self.background, (0, 0))
+            window.blit(table_surface, (WIDTH//2 - table_surface.get_width()//2, HEIGHT//2 - table_surface.get_height()//2))
         else:
             # Draw the settings menu
             table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.6))
@@ -189,18 +199,23 @@ class Draw():
         for event in events:
             if event.type == pg.KEYDOWN:
                 # Return to main settings menu with B key
-                if event.key == pg.K_b and self.show_controller_panel:
+                if event.key == pg.K_b and (self.show_controller_panel or self.show_sfx_panel):
                     self.show_controller_panel = False
+                    self.show_sfx_panel = False  # Add this line to handle SFX panel
                     self.is_binding_mode = False
-                    chosed_sound.play()
+                    Sound_config.chosed_sound.play()
                     return True
 
                 # Open controller panel
                 if event.key == pg.K_RETURN or event.key == pg.K_KP_ENTER:
-                    if self.selected_option == 2:  # Only if CONTROLLER is selected
+                    if self.selected_option == 2:  # CONTROLLER
                         if not self.show_controller_panel:
                             self.show_controller_panel = True
-                            chosed_sound.play()
+                            Sound_config.chosed_sound.play()
+                        return True
+                    elif self.selected_option == 1:  # SFX
+                        self.show_sfx_panel = not self.show_sfx_panel
+                        Sound_config.chosed_sound.play()
                         return True
 
                 if self.show_controller_panel:
@@ -208,25 +223,25 @@ class Draw():
                     if not self.is_binding_mode:
                         if event.key == pg.K_UP:
                             self.selected_control = (self.selected_control - 1) % len(self.controller_options)
-                            tick_sound.play()
+                            Sound_config.tick_sound.play()
                         elif event.key == pg.K_DOWN:
                             self.selected_control = (self.selected_control + 1) % len(self.controller_options)
-                            tick_sound.play()
+                            Sound_config.tick_sound.play()
                     
                     if event.key == pg.K_SPACE:
                         self.is_binding_mode = not self.is_binding_mode
-                        chosed_sound.play()
+                        Sound_config.chosed_sound.play()
                         return False
 
                     # Add save/reset shortcuts with notifications
                     elif event.key == pg.K_s and not self.is_binding_mode:
                         Controller_config.save_config()
                         self.show_notification("Settings Saved!")
-                        chosed_sound.play()
+                        Sound_config.chosed_sound.play()
                     elif event.key == pg.K_r and not self.is_binding_mode:
                         Controller_config.reset_key()
                         self.show_notification("Settings Reset!")
-                        chosed_sound.play()
+                        Sound_config.chosed_sound.play()
 
                     if self.is_binding_mode:
                         if event.key != pg.K_SPACE and event.key != pg.K_m:
@@ -255,19 +270,22 @@ class Draw():
                                 Controller_config.set_key(2, player2_keys)
                             
                             self.is_binding_mode = False
-                            chosed_sound.play()
+                            Sound_config.chosed_sound.play()
+                elif self.show_sfx_panel:
+                    # Add navigation for SFX panel if needed
+                    pass
                 else:
                     # Main settings menu navigation logic
                     if event.key == pg.K_UP:
                         self.selected_option = max(1, self.selected_option - 1)
-                        tick_sound.play()
+                        Sound_config.tick_sound.play()
                     elif event.key == pg.K_DOWN:
                         self.selected_option = min(2, self.selected_option + 1)
-                        tick_sound.play()
+                        Sound_config.tick_sound.play()
                     elif event.key == pg.K_RETURN:
                         if self.selected_option == 2:  # If CONTROLLER is selected
                             self.show_controller_panel = True
-                            chosed_sound.play()
+                            Sound_config.chosed_sound.play()
             elif event.type == pg.MOUSEBUTTONDOWN and self.show_controller_panel:
                 mouse_x, mouse_y = pg.mouse.get_pos()
                 
@@ -287,7 +305,7 @@ class Draw():
                     button_y <= mouse_y <= button_y + button_height):
                     print("Save clicked")  # Debug print
                     Controller_config.save_config()
-                    chosed_sound.play()
+                    Sound_config.chosed_sound.play()
                 
                 # Reset button (right button)
                 reset_x = panel_x + 3*panel_width//4 - button_width//2
@@ -295,7 +313,7 @@ class Draw():
                     button_y <= mouse_y <= button_y + button_height):
                     print("Reset clicked")  # Debug print
                     Controller_config.reset_key()
-                    chosed_sound.play()
+                    Sound_config.chosed_sound.play()
         
         return False
 
@@ -406,6 +424,62 @@ class Draw():
     def show_notification(self, message):
         self.notification = message
         self.notification_start_time = pg.time.get_ticks()
+
+
+    def draw_sfx_panel(self, surface, y_offset):
+        panel_width = 400
+        panel_height = 350
+        panel_x = surface.get_width() // 2 - panel_width // 2
+        panel_y = y_offset - 50
+
+        panel_surface = pg.Surface((panel_width, panel_height))
+        panel_surface.fill((60, 60, 60))
+        pg.draw.rect(panel_surface, (255, 255, 255), panel_surface.get_rect(), 2)
+
+        sliders = [
+            ("Master volume", 50),
+            ("Cheering volume", 100),
+            ("Ball volume", 150),
+            ("SFX volume", 200)
+        ]
+
+        for i, (label, y_pos) in enumerate(sliders):
+            label_text = self.settings_font.render(label, True, (255, 255, 255))
+            panel_surface.blit(label_text, (20, y_pos))
+
+            # Draw full slider bar
+            pg.draw.rect(panel_surface, (255, 255, 255), (20, y_pos + 30, 360, 10))  # Full length bar
+
+            # Draw handle based on volume level
+            handle_x = 20 + int(self.volume_levels[i] * 360) - 10
+            handle_rect = pg.Rect(handle_x, y_pos + 25, 20, 20)
+            pg.draw.rect(panel_surface, (255, 165, 0), handle_rect)  # Draw handle
+
+            if self.active_slider == i:
+                mouse_x, _ = pg.mouse.get_pos()
+                relative_x = mouse_x - panel_x - 20
+                self.volume_levels[i] = max(0, min(1, relative_x / 360))
+
+        surface.blit(panel_surface, (panel_x, panel_y))
+
+    def handle_mouse_events(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            for i, (_, y_pos) in enumerate([
+                ("Master volume", 50),
+                ("Cheering volume", 100),
+                ("Ball volume", 150),
+                ("SFX volume", 200)
+            ]):
+                slider_rect = pg.Rect(20, y_pos + 30, 360, 10)
+                panel_x = self.window.get_width() // 2 - 400 // 2
+                panel_y = 0  # Adjust based on actual y_offset used in draw_sfx_panel
+                if slider_rect.move(panel_x, panel_y).collidepoint(mouse_x, mouse_y):
+                    self.active_slider = i
+                    break
+
+        elif event.type == pg.MOUSEBUTTONUP:
+            self.active_slider = None
 
 
 

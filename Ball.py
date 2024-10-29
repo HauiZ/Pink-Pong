@@ -1,16 +1,13 @@
-from os import environ
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame as pg
 import numpy as np
 import random
 import threading
 import time
 import GUI
+import Sound_config
 
 defaut_color = "yellow"
-pg.mixer.init()
-bounce = pg.mixer.Sound('sound/bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
-left = pg.mixer.Sound('sound/leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
+  #Thiết lập âm thanh của người chơi bên trái
 right = pg.mixer.Sound('sound/rightplayer.wav')  
 WIDTH = 1400
 HEIGHT = 700   #Thiết lập âm thanh của người chơi bên phải
@@ -57,7 +54,7 @@ class Ball:
         window.blit(self.text, (WIDTH//2 - self.text.get_width()//2, HEIGHT - 25 - self.text.get_height()//2))
         if self.ball_position[1] <= 0 +15 or self.ball_position[1] >= HEIGHT - 15:
             self.ball_velocity[1] *= -1
-            bounce.play() 
+            Sound_config.bounce.play() 
         self.ball_position = self.ball_position + self.ball_velocity     
         
         pass
@@ -78,7 +75,7 @@ class Ball:
         # Check left and right boundaries
         if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.rect.height):  # Left boundary (bar width + ball radius)
             self.ball_position[0] = 20
-            left.play()
+            Sound_config.left.play()
             self.Hit()
         elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.rect.height):  # Right boundary
             self.ball_position[0] = WIDTH - 20
