@@ -12,8 +12,8 @@ import Controller_config  # Thêm import này ở đầu file
 WIDTH = 1400
 HEIGHT = 700
 color_def = "white"
-score_a = 0
-score_b = 0
+game_score_a =""
+game_score_b =""
 combo_countera = 0
 combo_counterb = 0
 game_state = "game_menu"
@@ -29,6 +29,8 @@ class Draw():
         self.ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),window)
         self.test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,window)
         self.font = pg.font.Font(None, 36)
+        self.font2 = pg.font.Font("fonts/Antonio-Bold.ttf",20)
+        self.font3 = pg.font.Font("fonts/Antonio-Bold.ttf",14)
         self.paddle_a = Paddle.Paddle(10,0,10,700)
         self.paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
         self.settings_font = pg.font.Font(None, 30)  # Smaller font for settings
@@ -569,6 +571,52 @@ class Draw():
 
         surface.blit(panel_surface, (panel_x, panel_y))
 
+    def score_board(self,game_score_a,game_score_b,set1_score_a,set1_score_b,set2_score_a,set2_score_b,set3_score_a,set3_score_b,tb_score_a,tb_score_b,window):
+        table_surface = pg.Surface((270, 60)) 
+        table_surface.fill((255,255,255)) 
+        score_display1 = self.font3.render(f"Game", True, "black")
+        score_display13 = self.font3.render(f"Player A", True, "black")
+        score_display14 = self.font3.render(f"Player B", True, "black")
+        score_display2 = self.font2.render(f"{game_score_a}", True, "black")
+        score_display3 = self.font2.render(f"{game_score_b}", True, "black")
+        score_display4 = self.font3.render(f"Set 1", True, "black")
+        score_display5 = self.font2.render(f"{set1_score_a}", True, "red")
+        score_display6 = self.font2.render(f"{set1_score_b}", True, "red")
+        score_display7 = self.font3.render(f"Set 2", True, "black")
+        score_display8 = self.font2.render(f"{set2_score_a}", True, "red")
+        score_display9 = self.font2.render(f"{set2_score_b}", True, "red")
+        score_display10 = self.font3.render(f"Set 3", True, "black")
+        score_display11 = self.font2.render(f"{set3_score_a}", True, "red")
+        score_display12 = self.font2.render(f"{set3_score_b}", True, "red")
+        score_display15 = self.font3.render(f"Tie-break", True, "black")
+        score_display16 = self.font2.render(f"{tb_score_a}", True, "red")
+        score_display17 = self.font2.render(f"{tb_score_b}", True, "red")
+
+        #Game score board
+        table_surface.blit(score_display1, (50, 0))
+        table_surface.blit(score_display2, (60, 15))
+        table_surface.blit(score_display3, (60, 35))
+        table_surface.blit(score_display13, (5, 19))
+        table_surface.blit(score_display14, (5, 38))
+
+        #Set score board
+        table_surface.blit(score_display4, (95, 0))
+        table_surface.blit(score_display5, (102, 15))
+        table_surface.blit(score_display6, (102, 35))
+
+        table_surface.blit(score_display7, (130, 0))
+        table_surface.blit(score_display8, (137, 15))
+        table_surface.blit(score_display9, (137, 35))
+
+        table_surface.blit(score_display10, (165, 0))
+        table_surface.blit(score_display11, (172, 15))
+        table_surface.blit(score_display12, (172, 35))
+
+        #Tie-break score board
+        table_surface.blit(score_display15, (200, 0))
+        table_surface.blit(score_display16, (220, 15))
+        table_surface.blit(score_display17, (220, 35))
+        window.blit(table_surface, ((WIDTH//2 - table_surface.get_width()//2)-5, 0))    
 
 
 
