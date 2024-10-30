@@ -55,10 +55,10 @@ if __name__ == '__main__' :
     pg.init()
         
     clock = pg.time.Clock()
-    ball = Ball.Ball(WIDTH // 2, random.randint(20,HEIGHT-20),screen)
+    ball = Ball.Ball(20, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
-    paddle_a = Paddle.Paddle(10,0,10,700)
-    paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
+    paddle_a = Paddle.Paddle(10,HEIGHT//2,10,100)
+    paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2,10,100)
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     Draw = GUI.Draw(screen)
     while True:
@@ -121,6 +121,26 @@ if __name__ == '__main__' :
             if result == "game_menu":
                 game_state = "game_menu"
                 Sound_config.chosed_sound.play()
+                playera_points = 0
+                playerb_points = 0
+                score_a.clear()
+                score_b.clear()
+                game_score_a = "0"
+                game_score_b = "0"
+                set1_score_a = 0
+                set1_score_b = 0
+                set2_score_a = 0
+                set2_score_b = 0
+                set3_score_a = 0
+                set3_score_b = 0
+                tb_score_a = 0
+                tb_score_b = 0
+                combo_countera = 0
+                combo_counterb = 0
+                ball = Ball.Ball(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ),screen)
+                paddle_a.Reset(10,HEIGHT//2)
+                paddle_b.Reset(WIDTH-20,HEIGHT//2)
+                
         
         elif game_state == "playing": 
             for event in pg.event.get():
@@ -449,7 +469,7 @@ if __name__ == '__main__' :
             ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b,screen)
             test_ball.Updateposition(HEIGHT,WIDTH)
 
-        # if playera_points >= 10 or playerb_points >= 10:
+        # if playera_points >= 10 or playerb_points >= 10: // thay cái điều kiện if này thôi
         #     game_state = "game_over"
         #     winner = "A" if score_a > score_b else "B"
         #     Draw.draw_game_over(winner, screen)
@@ -459,8 +479,23 @@ if __name__ == '__main__' :
         #         game_state = "game_menu"
         #         Draw.change_background('images/field.png')
         #         Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))
-        #         score_a = score_b = 0
-        #         ball.Reset(WIDTH // 2, random.randint(20,HEIGHT-20))  # Đặt lại vị trí bóng
+        #         playera_points = 0
+        #         playerb_points = 0
+        #         score_a.clear()
+        #         score_b.clear()
+        #         game_score_a = "0"
+        #         game_score_b = "0"
+        #         set1_score_a = 0
+        #         set1_score_b = 0
+        #         set2_score_a = 0
+        #         set2_score_b = 0
+        #         set3_score_a = 0
+        #         set3_score_b = 0
+        #         tb_score_a = 0
+        #         tb_score_b = 0
+        #         combo_countera = 0
+        #         combo_counterb = 0
+        #         ball = Ball.Ball(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ),screen)
         #         paddle_a.Reset(10,HEIGHT//2)
         #         paddle_b.Reset(WIDTH-20,HEIGHT//2)
         

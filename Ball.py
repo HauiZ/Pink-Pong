@@ -19,7 +19,7 @@ class Ball:
         self.font = pg.font.Font(None, 36)
         self.ball_x = ball_x
         self.ball_y = ball_y
-        self.ball_position = np.array([ball_x,ball_y],dtype= np.float64)
+        self.ball_position = np.array([self.ball_x,self.ball_y],dtype= np.float64)
         self.ball_velocity = np.array([6,6],dtype= np.float64)
         self.color = "yellow"
         self.ball = pg.draw.circle(window,self.color,self.ball_position,self.ball_radius)
@@ -35,7 +35,8 @@ class Ball:
 
     def Hit(self):
         self.ball_velocity[0] *= -1
-        self.ball_velocity[0] += 1 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
+        if self.ball_velocity[0] != 0:
+            self.ball_velocity[0] += 1 * (abs(self.ball_velocity[0]) / self.ball_velocity[0])
         ran = random.randint(-1, 1)
         while ran == 0:
             ran = random.randint(-1, 1)
@@ -66,7 +67,9 @@ class Ball:
 
     def Reset(self, x, y):
         
-        self.ball_position = np.array([x, y], dtype=np.float64)
+        self.ball_x = x
+        self.ball_y = y
+        self.ball_position = np.array([self.ball_x,self.ball_y],dtype= np.float64)
         self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*0,0],dtype= np.float64)
         ran = random.randint(-1, 1)
         while ran == 0:
