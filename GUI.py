@@ -68,8 +68,6 @@ class Draw():
             mode_map_color = "white"
         elif mode_map == "map2":
             mode_map_color = "yellow"
-        else:
-            mode_map_color = "blue"
         mode_map_changed = self.font.render(f"{mode_map}", True, mode_map_color)
         current_time = pg.time.get_ticks()
         if (current_time // 500) % 2 == 0:
@@ -84,20 +82,14 @@ class Draw():
     
 
     def draw_game_over(self, winner, window):
-        # Vẽ nền
-        window.blit(self.background, (0, 0))  # Vẽ hình nền
-        # Tạo bảng Game Over
-        table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.4), pg.SRCALPHA)  # Nền trong suốt
-        pg.draw.rect(table_surface, (0, 0, 0, 200), table_surface.get_rect(), border_radius=20)  # Bảng Game Over với góc bo tròn
-
-        # Tạo văn bản
-        title_font = pg.font.Font(None, 64)  # Phông chữ cho tiêu đề
-        option_font = pg.font.Font(None, 36)  # Phông chữ cho các tùy chọn
-
-        # Tạo văn bản
-        game_over_text = title_font.render("GAME OVER", True, (255, 0, 0))  # Màu đỏ
-        winner_text = option_font.render(f"Winner: {winner}", True, (255, 215, 0))  # Màu vàng
-        replay_text = option_font.render("Press R to Restart", True, (0, 255, 0))  # Màu xanh lá
+        window.blit(self.background, (0, 0)) 
+        table_surface = pg.Surface((WIDTH * 0.5, HEIGHT * 0.4), pg.SRCALPHA)
+        pg.draw.rect(table_surface, (0, 0, 0, 200), table_surface.get_rect(), border_radius=20) 
+        title_font = pg.font.Font(None, 64)
+        option_font = pg.font.Font(None, 36) 
+        game_over_text = title_font.render("GAME OVER", True, (255, 0, 0)) 
+        winner_text = option_font.render(f"Winner: {winner}", True, (255, 215, 0))  
+        replay_text = option_font.render("Press R to Restart", True, (0, 255, 0)) 
 
         
         current_time = pg.time.get_ticks()

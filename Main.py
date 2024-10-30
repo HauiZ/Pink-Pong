@@ -57,8 +57,8 @@ if __name__ == '__main__' :
     clock = pg.time.Clock()
     ball = Ball.Ball(20, random.randint(20,HEIGHT-20),screen)
     font = pg.font.Font(None, 36)
-    paddle_a = Paddle.Paddle(10,HEIGHT//2,10,100)
-    paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2,10,100)
+    paddle_a = Paddle.Paddle(10,HEIGHT//2-50,10,100)
+    paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2-50,10,100)
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     Draw = GUI.Draw(screen)
     while True:
@@ -106,9 +106,6 @@ if __name__ == '__main__' :
                         Draw.change_background('images/sand_field.png')
                         mode_map = "map2"
                     elif mode_map == "map2":
-                        Draw.change_background('images/space_field.png')
-                        mode_map = "map3"
-                    elif mode_map == "map3":
                         Draw.change_background('images/field.png')
                         mode_map = "map1"
             else:
@@ -137,9 +134,9 @@ if __name__ == '__main__' :
                 tb_score_b = 0
                 combo_countera = 0
                 combo_counterb = 0
-                ball = Ball.Ball(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ),screen)
-                paddle_a.Reset(10,HEIGHT//2)
-                paddle_b.Reset(WIDTH-20,HEIGHT//2)
+                ball = Ball.Ball(30,HEIGHT//2,screen)
+                paddle_a.Reset(10,HEIGHT//2-50)
+                paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
                 
         
         elif game_state == "playing": 
@@ -166,7 +163,9 @@ if __name__ == '__main__' :
                 playerb_points +=1
                 combo_counterb += 1
                 combo_countera = 0
-                ball.Reset(paddle_b.x+paddle_b.width+10, random.randint(paddle_b.y + 10,paddle_b.y+paddle_b.height-10 ))  # Đặt lại vị trí bóng
+                ball.Reset(WIDTH-30, HEIGHT//2)
+                paddle_a.Reset(10,HEIGHT//2-50)
+                paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
                 # if combo_counterb % 3 == 0:
                     
                 #     Sound_config.cheer.play()    #lệnh chạy âm thanh
@@ -315,7 +314,9 @@ if __name__ == '__main__' :
                 playera_points +=1
                 combo_countera += 1
                 combo_counterb = 0
-                ball.Reset(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ))  # Đặt lại vị trí bóng
+                ball.Reset(30, HEIGHT//2)
+                paddle_a.Reset(10,HEIGHT//2-50)
+                paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
                 # if combo_countera % 3 == 0:
                     
                 #     Sound_config.cheer.play()   
@@ -469,9 +470,9 @@ if __name__ == '__main__' :
             ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b,screen)
             test_ball.Updateposition(HEIGHT,WIDTH)
 
-        # if playera_points >= 10 or playerb_points >= 10: // thay cái điều kiện if này thôi
+        # if playera_points >= 10 or playerb_points >= 10: // thay cái điều kiện đây
         #     game_state = "game_over"
-        #     winner = "A" if score_a > score_b else "B"
+        #     winner = "A" if score_a > score_b else "B" // thay đổi điều kiện đây
         #     Draw.draw_game_over(winner, screen)
         #     keys = pg.key.get_pressed()
         #     if keys[pg.K_r]:
@@ -495,9 +496,9 @@ if __name__ == '__main__' :
         #         tb_score_b = 0
         #         combo_countera = 0
         #         combo_counterb = 0
-        #         ball = Ball.Ball(paddle_a.x+paddle_a.width+10, random.randint(paddle_a.y + 10,paddle_a.y+paddle_a.height-10 ),screen)
-        #         paddle_a.Reset(10,HEIGHT//2)
-        #         paddle_b.Reset(WIDTH-20,HEIGHT//2)
+        #         ball.Reset(30, HEIGHT//2)
+        #         paddle_a.Reset(10,HEIGHT//2-50)
+        #         paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
         
         pg.display.flip()
         clock.tick(90)

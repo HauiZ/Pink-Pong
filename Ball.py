@@ -155,14 +155,16 @@ class Ball:
                 self.text_atribute = "Increases the height of paddle A by 2 times!"
                 self.color_text_atribute = "orange"
                 time.sleep(5)
-                paddle_a.rect.height /= 2
+                if paddle_a.rect.height >= 200:
+                    paddle_a.rect.height /= 2
                 self.text_atribute = " "
             else:
                 paddle_b.rect.height *= 2
                 self.text_atribute = "Increases the height of paddle B by 2 times!"
                 self.color_text_atribute = "orange"
                 time.sleep(5)
-                paddle_b.rect.height /= 2
+                if paddle_b.rect.height >= 200:
+                    paddle_b.rect.height /= 2
                 self.text_atribute = " "
 
     def reset_ball_velocity(self):
