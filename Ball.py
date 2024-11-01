@@ -76,7 +76,7 @@ class Ball:
             ran = random.randint(-1, 1)
         self.ball_velocity[1] *= ran
         self.ball_radius = 15
-        reset_speed = threading.Thread(target=self.reset_ball_velocity)
+        reset_speed = threading.Thread(target=self.reset_ball_velocity, args=(x,))
         reset_speed.start()
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
@@ -167,12 +167,12 @@ class Ball:
                     paddle_b.rect.height /= 2
                 self.text_atribute = " "
 
-    def reset_ball_velocity(self):
-        time.sleep(3)
-        if self.ball_velocity[0] != 0:
-            self.ball_velocity = np.array([(abs(self.ball_velocity[0])/self.ball_velocity[0])*6,6],dtype= np.float64)
+    def reset_ball_velocity(self, x):
+        # time.sleep(3)
+        if x == 30:
+            self.ball_velocity = np.array([15,15],dtype= np.float64)
         else:
-            self.ball_velocity = np.array([6,6],dtype= np.float64)
+            self.ball_velocity = np.array([-15,15],dtype= np.float64)
     
 
 

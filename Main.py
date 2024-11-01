@@ -8,26 +8,12 @@ import random
 import Atribute_ball
 import GUI 
 import Sound_config
+import logic_score
 WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 color_def = "white"
 #point
-playera_points = 0
-playerb_points = 0
-score_a = []
-score_b = []
-set_score = ["0", "15", "30", "40","AD"]
-game_score_a = "0"
-game_score_b = "0"
-set1_score_a = 0
-set1_score_b = 0
-set2_score_a = 0
-set2_score_b = 0
-set3_score_a = 0
-set3_score_b = 0
-tb_score_a = 0
-tb_score_b = 0
 combo_countera = 0 #combo counter a
 combo_counterb = 0 #combo counter b
 
@@ -49,7 +35,7 @@ def draw_objects(window, background):
     paddle_b.Draw(window)
     test_ball.Display(window)
     ball.Display(window)
-    Draw.score_board(game_score_a,game_score_b,set1_score_a,set1_score_b,set2_score_a,set2_score_b,set3_score_a,set3_score_b,tb_score_a,tb_score_b,window)
+    logic.score_board(window)
     
 if __name__ == '__main__' : 
     pg.init()
@@ -61,6 +47,7 @@ if __name__ == '__main__' :
     paddle_b = Paddle.Paddle(WIDTH-20,HEIGHT//2-50,10,100)
     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4),0,screen)
     Draw = GUI.Draw(screen)
+    logic = logic_score.logic_score()
     while True:
         events = pg.event.get()
         for event in events:
@@ -118,21 +105,17 @@ if __name__ == '__main__' :
             if result == "game_menu":
                 game_state = "game_menu"
                 Sound_config.chosed_sound.play()
-                playera_points = 0
-                playerb_points = 0
-                score_a.clear()
-                score_b.clear()
-                game_score_a = "0"
-                game_score_b = "0"
-                set1_score_a = 0
-                set1_score_b = 0
-                set2_score_a = 0
-                set2_score_b = 0
-                set3_score_a = 0
-                set3_score_b = 0
-                tb_score_a = 0
-                tb_score_b = 0
-                combo_countera = 0
+                logic.playera_points = 0
+                logic.playerb_points = 0
+                logic.score_a.clear()
+                logic.score_b.clear()
+                logic.game_score_a = "0"
+                logic.game_score_b = "0"
+                logic.set1_score_a = 0
+                logic.set1_score_b = 0
+                logic.tb_score_a = 0
+                logic.tb_score_b = 0
+                combo_countera = 0 
                 combo_counterb = 0
                 ball = Ball.Ball(30,HEIGHT//2,screen)
                 paddle_a.Reset(10,HEIGHT//2-50)
@@ -157,309 +140,31 @@ if __name__ == '__main__' :
                 elif paddle_b.rect.y + paddle_b.rect.height/2 < int(ball.ball_position[1]) and abs(paddle_b.rect.y - ball.ball_position[1]) > 0:
                     paddle_b.paddble_b_down()
             draw_objects(screen, Draw.background)
+            
             # ball.check_Hit_Atribute(test_ball)
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
-                playerb_points +=1
+                logic.update_playerbpoints()
                 combo_counterb += 1
                 combo_countera = 0
                 ball.Reset(WIDTH-30, HEIGHT//2)
                 paddle_a.Reset(10,HEIGHT//2-50)
                 paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
-                # if combo_counterb % 3 == 0:
-                    
-                #     Sound_config.cheer.play()    #lệnh chạy âm thanh
-                #     combo_counterb = 0
-                # elif score_a - score_b >= 4 and combo_counterb == 1:
-                    
-                #     Sound_config.ohh.play()
                 #logic score
-                if playerb_points == 0 and ( set1_score_a != 6  or set1_score_b != 6) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ) :
-                    score_b.clear()
-                    score_b.append(set_score[0])
-                    game_score_b = str(score_b[0])
-                elif playerb_points == 1 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ) :
-                    score_b.clear()
-                    score_b.append(set_score[1])
-                    game_score_b = str(score_b[0])
-                elif playerb_points == 2 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ) :
-                    score_b.clear()
-                    score_b.append(set_score[2])
-                    game_score_b = str(score_b[0])
-                elif playerb_points == 3 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ) :
-                    score_b.clear()
-                    score_b.append(set_score[3])
-                    game_score_b = str(score_b[0])
-                elif playerb_points == 4 and (game_score_b == game_score_a) and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ) :
-                    score_b.clear()
-                    score_b.append(set_score[4])
-                    game_score_b = str(score_b[0])
-                elif playerb_points == playera_points == 4:
-                    score_b.clear()
-                    score_b.append(set_score[3])
-                    game_score_b = str(score_b[0])
-                    score_a.clear()
-                    score_a.append(set_score[3])
-                    game_score_a = str(score_a[0])
-                    playera_points = 3
-                    playerb_points = 3
-                elif (playerb_points == 4 or playerb_points >= 5)  and (playerb_points - playera_points >=1) and (set1_score_b <= 7) : 
-                    if set1_score_b < 6 and set1_score_a != 6 and set1_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        set1_score_b +=1
-                        print(1)
-                    elif set1_score_b >= 5 and set1_score_a > 4 and set1_score_b != 7 and set1_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        set1_score_b +=1
-                        print(2)
-                    elif set2_score_b < 6 and set2_score_a != 6 and set2_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set2_score_b +=1
-                    elif set2_score_b >= 5 and set2_score_a > 4 and set2_score_b != 7 and set2_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set2_score_b +=1
-                    elif set3_score_b < 6 and set3_score_a != 6 and set3_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set3_score_b +=1
-                    elif set3_score_b >= 5 and set3_score_a > 4 and set3_score_b != 7 and set3_score_a != 7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set3_score_b +=1
-                    elif (set1_score_a == 6 and set1_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_b += 1
-                        if (tb_score_b >= 7 )and (tb_score_b - tb_score_a >= 2):
-                            set1_score_b +=1
-                    elif (set2_score_a == 6 and set2_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_b += 1
-                        if (tb_score_b >= 7 )and (tb_score_b - tb_score_a >= 2):
-                            set2_score_b +=1    
-                    elif (set3_score_a == 6 and set3_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_b += 1
-                        if (tb_score_b >= 7 )and (tb_score_b - tb_score_a >= 2):
-                            set3_score_b +=1
+                logic.game_scoreb()
+                logic.SetScoreb()
+
             if ball.ball_position[0] >= WIDTH - 5:
-                playera_points +=1
-                combo_countera += 1
+                logic.update_playerapoints()
+                combo_countera +=1
                 combo_counterb = 0
                 ball.Reset(30, HEIGHT//2)
                 paddle_a.Reset(10,HEIGHT//2-50)
                 paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
-                # if combo_countera % 3 == 0:
-                    
-                #     Sound_config.cheer.play()   
-                #     combo_countera = 0
-                # elif score_b - score_a >= 4 and combo_countera == 1:
-                    
-                #     Sound_config.ohh.play()
                 #logic score
-                if playera_points == 0 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ):
-                    score_a.clear()
-                    score_a.append(set_score[0])
-                    game_score_a = str(score_a[0])
-                elif playera_points == 1 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ):
-                    score_a.clear()
-                    score_a.append(set_score[1])
-                    game_score_a = str(score_a[0])
-                elif playera_points == 2 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ):
-                    score_a.clear()
-                    score_a.append(set_score[2])
-                    game_score_a = str(score_a[0])
-                elif playera_points == 3 and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ):
-                    score_a.clear()
-                    score_a.append(set_score[3])
-                    game_score_a = str(score_a[0])
-                elif playera_points == 4 and (game_score_b == game_score_a) and ( set1_score_a != 6  or set1_score_b != 6 ) and ( set2_score_a != 6  or set2_score_b != 6 ) and ( set3_score_a != 6  or set3_score_b != 6 ):
-                    score_a.clear()
-                    score_a.append(set_score[4])
-                    game_score_a = str(score_a[0])
-                elif playerb_points == playera_points == 4:
-                    score_b.clear()
-                    score_b.append(set_score[3])
-                    game_score_b = str(score_b[0])
-                    score_a.clear()
-                    score_a.append(set_score[3])
-                    game_score_a = str(score_a[0])
-                    playera_points = 3
-                    playerb_points = 3
+                logic.game_scorea()
+                logic.SetScorea()
 
-                elif (playera_points == 4 or playera_points >= 5) and (playera_points - playerb_points >=1) and set1_score_a <= 7 :
-                    if set1_score_a < 6 and set1_score_b != 6 and set1_score_b !=7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        set1_score_a +=1
-                    elif set1_score_a >= 5 and set1_score_b > 4  and set1_score_a !=7 and set1_score_b !=7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        set1_score_a +=1
-                    elif set2_score_a < 6 and set2_score_b != 6  and set2_score_b !=7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set2_score_a +=1
-                    elif set2_score_a >= 5 and set2_score_b > 4 and set2_score_a !=7 and set2_score_b !=7:    
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set2_score_a +=1
-                    elif set3_score_a < 6 and set3_score_b != 6  and set3_score_b !=7:
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set3_score_a +=1
-                    elif set3_score_a >= 5 and set3_score_b > 4 and set3_score_a !=7 and set3_score_b !=7:    
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a = 0
-                        tb_score_b = 0
-                        set3_score_a +=1
-                    elif (set1_score_a == 6 and set1_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a += 1
-                        if (tb_score_a >= 7 )and (tb_score_a - tb_score_b >= 2):
-                            set1_score_a +=1
-                    elif (set2_score_a == 6 and set2_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a += 1
-                        if (tb_score_a >= 7 )and (tb_score_a - tb_score_b >= 2):
-                            set2_score_a +=1
-                    elif (set3_score_a == 6 and set3_score_b == 6):
-                        score_b.clear()
-                        score_b.append(set_score[0])
-                        game_score_b = str(score_b[0])
-                        score_a.clear()
-                        score_a.append(set_score[0])
-                        game_score_a = str(score_a[0])
-                        playerb_points = 0
-                        playera_points = 0
-                        tb_score_a += 1
-                        if (tb_score_a >= 7 )and (tb_score_a - tb_score_b >= 2):
-                            set3_score_a +=1
             if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
@@ -470,35 +175,29 @@ if __name__ == '__main__' :
             ball.Updateposition(HEIGHT,test_ball, paddle_a, paddle_b,screen)
             test_ball.Updateposition(HEIGHT,WIDTH)
 
-        # if playera_points >= 10 or playerb_points >= 10: // thay cái điều kiện đây
-        #     game_state = "game_over"
-        #     winner = "A" if score_a > score_b else "B" // thay đổi điều kiện đây
-        #     Draw.draw_game_over(winner, screen)
-        #     keys = pg.key.get_pressed()
-        #     if keys[pg.K_r]:
-        #         Sound_config.chosed_sound.play()
-        #         game_state = "game_menu"
-        #         Draw.change_background('images/field.png')
-        #         Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))
-        #         playera_points = 0
-        #         playerb_points = 0
-        #         score_a.clear()
-        #         score_b.clear()
-        #         game_score_a = "0"
-        #         game_score_b = "0"
-        #         set1_score_a = 0
-        #         set1_score_b = 0
-        #         set2_score_a = 0
-        #         set2_score_b = 0
-        #         set3_score_a = 0
-        #         set3_score_b = 0
-        #         tb_score_a = 0
-        #         tb_score_b = 0
-        #         combo_countera = 0
-        #         combo_counterb = 0
-        #         ball.Reset(30, HEIGHT//2)
-        #         paddle_a.Reset(10,HEIGHT//2-50)
-        #         paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
+        if logic.gameover() == True : 
+            game_state = "game_over"
+            winner = "A" if logic.set1_score_a > logic.set1_score_b else "B" 
+            Draw.draw_game_over(winner, screen)
+            keys = pg.key.get_pressed()
+            if keys[pg.K_r]:
+                Sound_config.chosed_sound.play()
+                game_state = "game_menu"
+                Draw.change_background('images/field.png')
+                Draw.background = pg.transform.scale(Draw.background, (WIDTH, HEIGHT))
+                logic.playera_points = 0
+                logic.playerb_points = 0
+                logic.score_a.clear()
+                logic.score_b.clear()
+                logic.game_score_a = "0"
+                logic.game_score_b = "0"
+                logic.set1_score_a = 0
+                logic.set1_score_b = 0
+                logic.tb_score_a = 0
+                logic.tb_score_b = 0
+                ball.Reset(30, HEIGHT//2)
+                paddle_a.Reset(10,HEIGHT//2-50)
+                paddle_b.Reset(WIDTH-20,HEIGHT//2-50)
         
         pg.display.flip()
         clock.tick(90)
