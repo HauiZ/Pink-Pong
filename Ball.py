@@ -168,11 +168,11 @@ class Ball:
                 self.text_atribute = " "
 
     def reset_ball_velocity(self, x):
-        # time.sleep(3)
+        time.sleep(3)
         if x == 30:
-            self.ball_velocity = np.array([15,15],dtype= np.float64)
+            self.ball_velocity = np.array([6,6],dtype= np.float64)
         else:
-            self.ball_velocity = np.array([-15,15],dtype= np.float64)
+            self.ball_velocity = np.array([-6,6],dtype= np.float64)
     
 
 
