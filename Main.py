@@ -142,6 +142,7 @@ if __name__ == '__main__' :
             draw_objects(screen, Draw.background)
             
             
+
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
                 logic.update_playerbpoints()
@@ -153,7 +154,7 @@ if __name__ == '__main__' :
                 #logic score
                 logic.game_scoreb()
                 logic.SetScoreb()
-
+                logic.Sound()
             if ball.ball_position[0] >= WIDTH - 5:
                 logic.update_playerapoints()
                 combo_countera +=1
@@ -164,7 +165,7 @@ if __name__ == '__main__' :
                 #logic score
                 logic.game_scorea()
                 logic.SetScorea()
-
+                logic.Sound()
             if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball

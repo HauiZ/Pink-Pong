@@ -12,6 +12,21 @@ bounce = pg.mixer.Sound('sound/bouncingball.wav')
 left = pg.mixer.Sound('sound/leftplayer.wav')         
 right = pg.mixer.Sound('sound/rightplayer.wav')
 
+game15_15 = pg.mixer.Sound('sound/15_15.mp3')
+game15_30 = pg.mixer.Sound('sound/15_30.mp3')
+game15_40 = pg.mixer.Sound('sound/15_40.mp3')
+game30_30 = pg.mixer.Sound('sound/30_30.mp3')
+game40_30 = pg.mixer.Sound('sound/40_30.mp3')
+game40_40 = pg.mixer.Sound('sound/40_40.mp3')
+gameAD = pg.mixer.Sound('sound/AD.mp3')
+gameEnd = pg.mixer.Sound('sound/Game_end.mp3')
+game0_15 = pg.mixer.Sound('sound/love_15_new.mp3')
+game0_30 = pg.mixer.Sound('sound/love_30.mp3')
+game0_40 = pg.mixer.Sound('sound/love_40.mp3')
+
+
+
+
 default_volume = 1
 Master_volume = default_volume  
 Cheering_volume = default_volume
