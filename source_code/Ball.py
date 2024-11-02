@@ -3,14 +3,13 @@ import numpy as np
 import random
 import threading
 import time
-import GUI
-import Sound_config
+from source_code import Sound_config
 
 defaut_color = "yellow"
-  #Thiết lập âm thanh của người chơi bên trái
+
 
 WIDTH = 1400
-HEIGHT = 700   #Thiết lập âm thanh của người chơi bên phải
+HEIGHT = 700  
 
 class Ball:
     ball_radius = 15
@@ -81,11 +80,11 @@ class Ball:
 
     def check_boundary(self, WIDTH, HEIGHT,bar,bar2):
         # Check left and right boundaries
-        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.rect.height):  # Left boundary (bar width + ball radius)
+        if self.ball_position[0] <= 20 and (self.ball_position[1] >= bar.rect.y and self.ball_position[1] <= bar.rect.y + bar.rect.height): 
             self.ball_position[0] = 20
             Sound_config.left.play()
             self.Hit()
-        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.rect.height):  # Right boundary
+        elif self.ball_position[0] >= WIDTH - 20 and (self.ball_position[1] >= bar2.rect.y and self.ball_position[1] <= bar2.rect.y + bar2.rect.height):
             self.ball_position[0] = WIDTH - 20
             Sound_config.right.play()
             self.Hit()

@@ -67,7 +67,7 @@ def load_sound_config():
     global Ball_volume
     global SFX_volume
     try:
-        with open('Sound_config.txt','r') as file:
+        with open('source_code/Sound_config.txt','r') as file:
             lines = file.readlines()
             for line in lines:
                 key,value = line.split('=')
@@ -83,7 +83,7 @@ def load_sound_config():
         Reset_sound_config()
 
 def save_sound_config():
-    with open('Sound_config.txt','w') as file:
+    with open('source_code/Sound_config.txt','w') as file:
         file.write(f"Master_volume = {Master_volume}\n")
         file.write(f"Cheering_volume = {Cheering_volume}\n")
         file.write(f"Ball_volume = {Ball_volume}\n")

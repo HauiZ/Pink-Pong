@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-import Controller_config
+from source_code import Controller_config
 defaut_color = "white"
 
 class Paddle:

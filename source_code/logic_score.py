@@ -1,6 +1,6 @@
-import GUI
+
 import pygame as pg
-import Sound_config
+
 WIDTH = 1400
 
 class logic_score:
@@ -16,8 +16,6 @@ class logic_score:
         self.set1_score_b = 0
         self.tb_score_a = 0
         self.tb_score_b = 0
-        self.font2 = pg.font.Font("fonts/Antonio-Bold.ttf",20)
-        self.font3 = pg.font.Font("fonts/Antonio-Bold.ttf",14)
      
     def update_playerapoints(self):
         self.playera_points += 1
@@ -198,37 +196,5 @@ class logic_score:
             return True
         elif self.set1_score_b == 7 and (self.set1_score_b - self.set1_score_a >=1) and self.set1_score_a >= 5:
             return True
-    def score_board(self,window):
-        # Tạo bảng Game Over
-        table_surface = pg.Surface((200, 60), pg.SRCALPHA)  # Nền trong suốt
-        pg.draw.rect(table_surface, (0, 0, 0, 200), table_surface.get_rect(), border_radius=20)
-        score_display1 = self.font3.render(f"Game", True, "white")
-        score_display13 = self.font3.render(f"Player A", True, "white")
-        score_display14 = self.font3.render(f"Player B", True, "white")
-        score_display2 = self.font2.render(f"{self.game_score_a}", True, "red")
-        score_display3 = self.font2.render(f"{self.game_score_b}", True, "red")
-        score_display4 = self.font3.render(f"Set", True, "white")
-        score_display5 = self.font2.render(f"{self.set1_score_a}", True, "red")
-        score_display6 = self.font2.render(f"{self.set1_score_b}", True, "red")
-        score_display15 = self.font3.render(f"Tie-break", True, "white")
-        score_display16 = self.font2.render(f"{self.tb_score_a}", True, "red")
-        score_display17 = self.font2.render(f"{self.tb_score_b}", True, "red")
-
-        #Game score board
-        table_surface.blit(score_display1, (55, 0))
-        table_surface.blit(score_display2, (65, 15))
-        table_surface.blit(score_display3, (65, 35))
-        table_surface.blit(score_display13, (10, 19))
-        table_surface.blit(score_display14, (10, 38))
-
-        #Set score board
-        table_surface.blit(score_display4, (100, 0))
-        table_surface.blit(score_display5, (107, 15))
-        table_surface.blit(score_display6, (107, 35))
-
-        #Tie-break score board
-        table_surface.blit(score_display15, (130, 0))
-        table_surface.blit(score_display16, (155, 15))
-        table_surface.blit(score_display17, (155, 35))
-        window.blit(table_surface, ((WIDTH//2 - table_surface.get_width()//2)-5, 0))
+    
 

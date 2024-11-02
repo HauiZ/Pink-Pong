@@ -2,29 +2,29 @@ from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame as pg
 import numpy as np
-import Ball
-import Paddle
 import random
-import Atribute_ball
-import GUI 
-import Sound_config
-import logic_score
+from source_code import Ball
+from source_code import Paddle
+from source_code import Atribute_ball
+from source_code import GUI 
+from source_code import Sound_config
+from source_code import logic_score
 WIDTH = 1400
 HEIGHT = 700
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 color_def = "white"
-#point
-combo_countera = 0 #combo counter a
-combo_counterb = 0 #combo counter b
 
-game_state = "game_menu" #game state
-mode = "single" #mode game
-mode_changed = False #mode changed
-mode_changed_1 = False #mode changed 1
-mode_changed_2 = False #mode changed 2
-clicked = False #clicked
-clicked_1 = False #clicked 1
-mode_map = "map1" #mode map
+combo_countera = 0 
+combo_counterb = 0 
+
+game_state = "game_menu"
+mode = "single" 
+mode_changed = False 
+mode_changed_1 = False
+mode_changed_2 = False 
+clicked = False 
+clicked_1 = False
+mode_map = "map1"
 
 
  
@@ -35,7 +35,7 @@ def draw_objects(window, background):
     paddle_b.Draw(window)
     test_ball.Display(window)
     ball.Display(window)
-    logic.score_board(window)
+    Draw.score_board(logic.game_score_a,logic.game_score_b,logic.set1_score_a,logic.set1_score_b,logic.tb_score_a,logic.tb_score_b,window)
     
 if __name__ == '__main__' : 
     pg.init()

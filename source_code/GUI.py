@@ -1,21 +1,17 @@
 import pygame as pg
 import numpy as np
-import Ball
-import Paddle
 import random
-import Atribute_ball
 import threading
-import Sound_config
-import Controller_config  # Thêm import này ở đầu file
+from source_code import Ball
+from source_code import Paddle
+from source_code import Atribute_ball
+from source_code import Sound_config
+from source_code import Controller_config  # Thêm import này ở đầu file
 
 
 WIDTH = 1400
 HEIGHT = 700
 color_def = "white"
-game_score_a =""
-game_score_b =""
-combo_countera = 0
-combo_counterb = 0
 game_state = "game_menu"
 mode = "single"
 mode_changed = False
@@ -33,8 +29,8 @@ class Draw():
         self.font3 = pg.font.Font("fonts/Antonio-Bold.ttf",14)
         self.paddle_a = Paddle.Paddle(10,0,10,700)
         self.paddle_b = Paddle.Paddle(WIDTH-20,0,10,100)
-        self.settings_font = pg.font.Font(None, 30)  # Smaller font for settings
-        self.selected_option = 1  # Initialize selected_option
+        self.settings_font = pg.font.Font(None, 30)  
+        self.selected_option = 1  
         self.blink_timer = 0
         self.blink_interval = 500  # Blink every 100 milliseconds (10 times per second)
         self.show_controller_panel = False
@@ -93,7 +89,7 @@ class Draw():
 
         
         current_time = pg.time.get_ticks()
-        if (current_time // 500) % 2 == 0:  # Nhấp nháy mỗi 500ms
+        if (current_time // 500) % 2 == 0: 
             table_surface.blit(game_over_text, (table_surface.get_width() // 2 - game_over_text.get_width() // 2, 20))
         table_surface.blit(winner_text, (table_surface.get_width() // 2 - winner_text.get_width() // 2, 100))  
         table_surface.blit(replay_text, (table_surface.get_width() // 2 - replay_text.get_width() // 2, 160))  
@@ -116,9 +112,9 @@ class Draw():
         settings = ["SETTINGS", "AUDIO", "CONTROLLER", "MENU"]
         settings_font = pg.font.Font(None, 48)
         
-        # Initialize y_offset with start_y
+       
         y_offset = start_y
-        line_spacing = 60  # Add line spacing variable
+        line_spacing = 60  
         
         current_time = pg.time.get_ticks()
         blink_color = "red" if (current_time // self.blink_interval) % 2 == 0 else "blue"
@@ -262,7 +258,7 @@ class Draw():
                                 if not new_value or 0 <= int(new_value) <= 100:
                                     self.current_volume_input = new_value
                             return True
-                        return True  # Block all other keys while inputting
+                        return True  
 
                 elif self.show_controller_panel:
                     # Thêm điều hướng cho bảng điều khiển
@@ -563,26 +559,17 @@ class Draw():
 
         surface.blit(panel_surface, (panel_x, panel_y))
 
-    def score_board(self,game_score_a,game_score_b,set1_score_a,set1_score_b,set2_score_a,set2_score_b,set3_score_a,set3_score_b,tb_score_a,tb_score_b,window):
-        # table_surface = pg.Surface((270, 60)) 
-        # table_surface.fill((255,255,255)) 
-        # Tạo bảng Game Over
-        table_surface = pg.Surface((300, 60), pg.SRCALPHA)  # Nền trong suốt
+    def score_board(self,game_score_a,game_score_b,set1_score_a,set1_score_b,tb_score_a,tb_score_b,window):
+        table_surface = pg.Surface((200, 60), pg.SRCALPHA)
         pg.draw.rect(table_surface, (0, 0, 0, 200), table_surface.get_rect(), border_radius=20)
         score_display1 = self.font3.render(f"Game", True, "white")
         score_display13 = self.font3.render(f"Player A", True, "white")
         score_display14 = self.font3.render(f"Player B", True, "white")
         score_display2 = self.font2.render(f"{game_score_a}", True, "red")
         score_display3 = self.font2.render(f"{game_score_b}", True, "red")
-        score_display4 = self.font3.render(f"Set 1", True, "white")
+        score_display4 = self.font3.render(f"Set", True, "white")
         score_display5 = self.font2.render(f"{set1_score_a}", True, "red")
         score_display6 = self.font2.render(f"{set1_score_b}", True, "red")
-        score_display7 = self.font3.render(f"Set 2", True, "white")
-        score_display8 = self.font2.render(f"{set2_score_a}", True, "red")
-        score_display9 = self.font2.render(f"{set2_score_b}", True, "red")
-        score_display10 = self.font3.render(f"Set 3", True, "white")
-        score_display11 = self.font2.render(f"{set3_score_a}", True, "red")
-        score_display12 = self.font2.render(f"{set3_score_b}", True, "red")
         score_display15 = self.font3.render(f"Tie-break", True, "white")
         score_display16 = self.font2.render(f"{tb_score_a}", True, "red")
         score_display17 = self.font2.render(f"{tb_score_b}", True, "red")
@@ -599,19 +586,11 @@ class Draw():
         table_surface.blit(score_display5, (107, 15))
         table_surface.blit(score_display6, (107, 35))
 
-        table_surface.blit(score_display7, (135, 0))
-        table_surface.blit(score_display8, (142, 15))
-        table_surface.blit(score_display9, (142, 35))
-
-        table_surface.blit(score_display10, (170, 0))
-        table_surface.blit(score_display11, (177, 15))
-        table_surface.blit(score_display12, (177, 35))
-
         #Tie-break score board
-        table_surface.blit(score_display15, (210, 0))
-        table_surface.blit(score_display16, (230, 15))
-        table_surface.blit(score_display17, (230, 35))
-        window.blit(table_surface, ((WIDTH//2 - table_surface.get_width()//2)-5, 0))    
+        table_surface.blit(score_display15, (130, 0))
+        table_surface.blit(score_display16, (155, 15))
+        table_surface.blit(score_display17, (155, 35))
+        window.blit(table_surface, ((WIDTH//2 - table_surface.get_width()//2)-5, 0))   
 
 
 
