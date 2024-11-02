@@ -134,9 +134,10 @@ class Ball:
     def run_check_Hit_Atribute_size_ball(self,ball_Atribute):
         if self.check_Hit_Atribute_size_ball(ball_Atribute) and ball_Atribute.hit == False:
             ball_Atribute.hit = True
-            self.ball_radius *= 2
-            self.text_atribute = "Increases ball size by 2 times!"
-            self.color_text_atribute = "green"
+            if self.ball_radius == 15:
+                self.ball_radius *= 2
+                self.text_atribute = "Increases ball size by 2 times!"
+                self.color_text_atribute = "green"
             time.sleep(5)
             if self.ball_radius > 15:
                 self.ball_radius /= 2
