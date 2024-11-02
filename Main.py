@@ -155,6 +155,11 @@ if __name__ == '__main__' :
                 logic.game_scoreb()
                 logic.SetScoreb()
                 logic.Sound()
+                if combo_counterb % 3 == 0:
+                    Sound_config.ohh.play()    #lệnh chạy âm thanh
+                    Sound_config.ohh.set_volume(0.7)  
+                    combo_counterb = 0
+
             if ball.ball_position[0] >= WIDTH - 5:
                 logic.update_playerapoints()
                 combo_countera +=1
@@ -166,6 +171,11 @@ if __name__ == '__main__' :
                 logic.game_scorea()
                 logic.SetScorea()
                 logic.Sound()
+                if combo_countera % 3 == 0:
+                    Sound_config.ohh.play()
+                    Sound_config.ohh.set_volume(0.7)   
+                    combo_countera = 0
+
             if ball.ball.colliderect(paddle_a) or (ball.ball_position[0] <= 20 and (ball.ball_position[1] >= paddle_a.paddle_position[1] and ball.ball_position[1] <= paddle_a.paddle_position[1] + paddle_a.height)):
                 if test_ball.active == False:
                     test_ball = Atribute_ball.Atribute_ball(random.randint(WIDTH//4, WIDTH - WIDTH//4), 0, screen)  # Tạo test_ball
