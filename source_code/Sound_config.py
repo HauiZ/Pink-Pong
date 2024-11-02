@@ -4,12 +4,12 @@ import pygame as pg
 
 pg.mixer.init()
 
-cheer = pg.mixer.Sound('sound/Cheering.wav')  #Thiết lập âm thanh cổ động viên 
+cheer = pg.mixer.Sound('sound/Cheering.wav')  
 ohh = pg.mixer.Sound('sound/ohh.wav')
 tick_sound = pg.mixer.Sound('sound/tick_sound.mp3')
 chosed_sound = pg.mixer.Sound('sound/chosed_sound.mp3')
-bounce = pg.mixer.Sound('sound/bouncingball.wav')     #Thiết lập âm thanh nảy của bóng
-left = pg.mixer.Sound('sound/leftplayer.wav')         #Thiết lập âm thanh của người chơi bên trái
+bounce = pg.mixer.Sound('sound/bouncingball.wav')    
+left = pg.mixer.Sound('sound/leftplayer.wav')         
 right = pg.mixer.Sound('sound/rightplayer.wav')
 
 default_volume = 1

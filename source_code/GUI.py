@@ -6,7 +6,7 @@ from source_code import Ball
 from source_code import Paddle
 from source_code import Atribute_ball
 from source_code import Sound_config
-from source_code import Controller_config  # Thêm import này ở đầu file
+from source_code import Controller_config 
 
 
 WIDTH = 1400
@@ -121,11 +121,11 @@ class Draw():
         
         for i, setting in enumerate(settings):
             if i == 0:
-                # Title font remains large
+                
                 title_font = pg.font.Font(None, 80)
                 text = title_font.render(setting, True, "white")
             else:
-                # Other options use smaller font
+                
                 text = settings_font.render(setting, True, "white")
                 
             text_x = surface.get_width()//2 - text.get_width()//2

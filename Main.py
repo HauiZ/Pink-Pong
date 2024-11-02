@@ -141,7 +141,7 @@ if __name__ == '__main__' :
                     paddle_b.paddble_b_down()
             draw_objects(screen, Draw.background)
             
-            # ball.check_Hit_Atribute(test_ball)
+            
             ball.check_boundary(WIDTH,HEIGHT,paddle_a,paddle_b)
             if ball.ball_position[0] <= 0 + 5:
                 logic.update_playerbpoints()
