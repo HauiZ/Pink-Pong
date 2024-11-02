@@ -66,6 +66,18 @@ def update_all_volumes():
 def update_cheering_volumes():
     cheer.set_volume(Master_volume * Cheering_volume)
     ohh.set_volume(Master_volume * Cheering_volume)
+    game0_15.set_volume(Master_volume * Cheering_volume)
+    game0_30.set_volume(Master_volume * Cheering_volume)
+    game0_40.set_volume(Master_volume * Cheering_volume)
+    game15_15.set_volume(Master_volume * Cheering_volume)
+    game15_30.set_volume(Master_volume * Cheering_volume)
+    game15_40.set_volume(Master_volume * Cheering_volume)
+    game30_30.set_volume(Master_volume * Cheering_volume)
+    game40_30.set_volume(Master_volume * Cheering_volume)
+    game40_40.set_volume(Master_volume * Cheering_volume)
+    gameAD.set_volume(Master_volume * Cheering_volume)
+    gameEnd.set_volume(Master_volume * Cheering_volume)
+
 
 def update_ball_volumes():
     bounce.set_volume(Master_volume * Ball_volume)
@@ -82,7 +94,7 @@ def load_sound_config():
     global Ball_volume
     global SFX_volume
     try:
-        with open('source_code/Sound_config.txt','r') as file:
+        with open('config/Sound_config.txt','r') as file:
             lines = file.readlines()
             for line in lines:
                 key,value = line.split('=')
@@ -98,7 +110,7 @@ def load_sound_config():
         Reset_sound_config()
 
 def save_sound_config():
-    with open('source_code/Sound_config.txt','w') as file:
+    with open('config/Sound_config.txt','w') as file:
         file.write(f"Master_volume = {Master_volume}\n")
         file.write(f"Cheering_volume = {Cheering_volume}\n")
         file.write(f"Ball_volume = {Ball_volume}\n")

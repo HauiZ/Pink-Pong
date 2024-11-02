@@ -7,7 +7,7 @@ defaut_up_player_2 = pygame.K_UP # player 2 (value 1073741906)
 defaut_down_player_2 = pygame.K_DOWN # (value 1073741905)
 
 
-file_config = "source_code/Controller_config.txt"
+file_config = "config/Controller_config.txt"
 # with open(file_config, "w") as file:
 #     file.write("key_player_1=119,220\n")
 #     file.write("key_player_2=1073741906\n")
@@ -19,7 +19,7 @@ key_player_2= [defaut_up_player_2,defaut_down_player_2]# player 2
 def load_config():
     global key_player_1, key_player_2
     try:
-        with open('source_code/Controller_config.txt', 'r') as f:
+        with open(file_config, 'r') as f:
             lines = f.readlines()
             for line in lines:
                 if line.startswith("key_player_1="):
